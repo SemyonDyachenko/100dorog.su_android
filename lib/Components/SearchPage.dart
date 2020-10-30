@@ -349,64 +349,57 @@ class _SearchPage extends State<SearchPage> {
                               fontWeight: FontWeight.w500),
                         ),
                       ),
-                      SingleChildScrollView(
-                        physics: BouncingScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            for (var i in text)
-                              Container(
-                                width: m_ScreenSize.width,
-                                margin: EdgeInsets.only(left: 20, right: 20),
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Colors.grey,
-                                      width: 0.3,
-                                    ),
-                                  ),
+                      Column(
+                        children: <Widget>[
+                          Container(
+                            width: m_ScreenSize.width,
+                            margin: EdgeInsets.only(left: 20, right: 20),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.grey,
+                                  width: 0.3,
                                 ),
-                                height: 65,
-                                child: Stack(
+                              ),
+                            ),
+                            height: 65,
+                            child: Stack(
+                              children: <Widget>[
+                                Column(
                                   children: <Widget>[
-                                    Column(
-                                      children: <Widget>[
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Container(
-                                            width: m_ScreenSize.width,
-                                            margin: EdgeInsets.only(
-                                                left: 0, top: 20, right: 0),
-                                            child: Text(
-                                              "Краснодар",
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Container(
+                                        width: m_ScreenSize.width,
+                                        margin: EdgeInsets.only(
+                                            left: 0, top: 20, right: 0),
+                                        child: Text(
+                                          "Краснодар",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w400,
                                           ),
                                         ),
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Container(
-                                            margin: EdgeInsets.only(
-                                                left: 0, top: 5),
-                                            child: Text(
-                                              "Краснодар, Краснодарский Край, Россия",
-                                              style:
-                                                  TextStyle(color: Colors.grey),
-                                            ),
-                                          ),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Container(
+                                        margin:
+                                            EdgeInsets.only(left: 0, top: 5),
+                                        child: Text(
+                                          "Краснодар, Краснодарский Край, Россия",
+                                          style: TextStyle(color: Colors.grey),
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
-                          ],
-                        ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -417,9 +410,91 @@ class _SearchPage extends State<SearchPage> {
         });
   }
 
+  String weekdayToString(int day) {
+    if (day > 7) {
+      return "Error: more seven days";
+    } else {
+      switch (day) {
+        case 1:
+          return "Понедельник";
+          break;
+        case 2:
+          return "Вторник";
+          break;
+        case 3:
+          return "Среда";
+          break;
+        case 4:
+          return "Четверг";
+          break;
+        case 5:
+          return "Пятница";
+          break;
+        case 6:
+          return "Суббота";
+          break;
+        case 7:
+          return "Воскресенье";
+          break;
+      }
+    }
+
+    return "none";
+  }
+
+  String monthToString(int month) {
+    if (month > 12) {
+      return "Error: more then 12 month!";
+    } else if (month <= 0) {
+      return "Error: smaller then 1 month!";
+    } else {
+      switch (month) {
+        case 1:
+          return "Января";
+          break;
+        case 2:
+          return "Февраля";
+          break;
+        case 3:
+          return "Марта";
+          break;
+        case 4:
+          return "Апреля";
+          break;
+        case 5:
+          return "Мая";
+          break;
+        case 6:
+          return "Июня";
+          break;
+        case 7:
+          return "Июля";
+          break;
+        case 8:
+          return "Августа";
+          break;
+        case 9:
+          return "Сентября";
+          break;
+        case 10:
+          return "Октября";
+          break;
+        case 11:
+          return "Ноября";
+          break;
+        case 12:
+          return "Декабря";
+          break;
+      }
+    }
+
+    return "none";
+  }
+
   @override
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
+    DateTime _dateTime;
 
     return Scaffold(
       body: Column(
@@ -529,10 +604,24 @@ class _SearchPage extends State<SearchPage> {
                                       child: FlatButton(
                                         highlightColor: Colors.transparent,
                                         splashColor: Colors.transparent,
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          showDatePicker(
+                                            context: context,
+                                            initialDate: _dateTime == null
+                                                ? DateTime.now()
+                                                : _dateTime,
+                                            firstDate: DateTime.now(),
+                                            lastDate: DateTime(2021),
+                                          ).then((date) {
+                                            setState(() {
+                                              _dateTime = date;
+                                            });
+                                          });
+                                        },
                                         child: Text(
-                                          (DateTime.now().day).toString() +
-                                              ' Октября, Понедельник',
+                                          _dateTime == null
+                                              ? DateTime.now().day.toString()
+                                              : _dateTime.day.toString(),
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 14),

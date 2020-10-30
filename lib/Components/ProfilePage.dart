@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Widgets/ProfileWidgets/ProfileIntroduce.dart';
 
 class ProfilePage extends StatelessWidget {
   static Route<dynamic> route() => MaterialPageRoute(
@@ -9,8 +10,12 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
 
-    return Scaffold(
-      body: Column(
+    return Scaffold(body: ProfileIntroduce());
+  }
+}
+
+/*
+Column(
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(top: 50),
@@ -41,15 +46,89 @@ class ProfilePage extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 0),
+            padding: EdgeInsets.only(top: 50),
             child: Form(
-              child: Wrap(
-                children: <Widget>[],
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(left: 15),
+                    child: TextFormField(
+                      decoration: const InputDecoration(labelText: 'Phone'),
+                      validator: (String value) {
+                        if (value.trim().isEmpty) {
+                          return "Phone is required";
+                        }
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 0, bottom: 20),
+                    width: m_ScreenSize.width * .70,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(200, 230, 230, 230),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(left: 15),
+                          child: Icon(Icons.lock_outline),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 15),
+                          child: Text('*****************'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 0, bottom: 20),
+                    width: m_ScreenSize.width * .70,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(200, 230, 230, 230),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(left: 15),
+                          child: Icon(Icons.lock_outline),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 15),
+                          child: Text('*****************'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 0, bottom: 20),
+                    width: m_ScreenSize.width * .70,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(500, 0, 120, 255),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: FlatButton(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      minWidth: m_ScreenSize.width * .70,
+                      onPressed: () {},
+                      child: Text(
+                        'Отправить',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
         ],
       ),
-    );
-  }
-}
+*/
