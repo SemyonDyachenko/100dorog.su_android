@@ -13,7 +13,7 @@ class ProfileIntroduce extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 20),
+            margin: EdgeInsets.only(top: 0),
             height: m_ScreenSize.height * 0.1,
             alignment: Alignment.center,
             child: Text(
@@ -63,7 +63,7 @@ class ProfileIntroduce extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    PageRoute(
+                    MaterialPageRoute(
                       builder: (context) {
                         return ProfileSignup();
                       },

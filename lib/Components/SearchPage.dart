@@ -30,7 +30,7 @@ class _SearchPage extends State<SearchPage> {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
             return new Container(
-              height: MediaQuery.of(context).size.height * .35,
+              height: MediaQuery.of(context).size.height * .36, // .35
               color:
                   Colors.transparent, //could change this to Color(0xFF737373),
               //so you don't have to change MaterialApp canvasColor
@@ -255,7 +255,7 @@ class _SearchPage extends State<SearchPage> {
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 10),
-                      alignment: Alignment.center,
+                      alignment: Alignment.topCenter,
                       child: FlatButton(
                         highlightColor: Colors.transparent,
                         splashColor: Colors.transparent,
@@ -281,7 +281,7 @@ class _SearchPage extends State<SearchPage> {
   void _openPlaceSelect(context) {
     var m_ScreenSize = MediaQuery.of(context).size;
 
-    List<int> text = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    List<int> text = [1, 2, 3, 4];
 
     showModalBottomSheet(
         shape: RoundedRectangleBorder(
@@ -351,54 +351,56 @@ class _SearchPage extends State<SearchPage> {
                       ),
                       Column(
                         children: <Widget>[
-                          Container(
-                            width: m_ScreenSize.width,
-                            margin: EdgeInsets.only(left: 20, right: 20),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey,
-                                  width: 0.3,
+                          for (var i in text)
+                            Container(
+                              width: m_ScreenSize.width,
+                              margin: EdgeInsets.only(left: 20, right: 20),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: Colors.grey,
+                                    width: 0.3,
+                                  ),
                                 ),
                               ),
-                            ),
-                            height: 65,
-                            child: Stack(
-                              children: <Widget>[
-                                Column(
-                                  children: <Widget>[
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Container(
-                                        width: m_ScreenSize.width,
-                                        margin: EdgeInsets.only(
-                                            left: 0, top: 20, right: 0),
-                                        child: Text(
-                                          "Краснодар",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w400,
+                              height: 65,
+                              child: Stack(
+                                children: <Widget>[
+                                  Column(
+                                    children: <Widget>[
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Container(
+                                          width: m_ScreenSize.width,
+                                          margin: EdgeInsets.only(
+                                              left: 0, top: 20, right: 0),
+                                          child: Text(
+                                            "Краснодар",
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Container(
-                                        margin:
-                                            EdgeInsets.only(left: 0, top: 5),
-                                        child: Text(
-                                          "Краснодар, Краснодарский Край, Россия",
-                                          style: TextStyle(color: Colors.grey),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Container(
+                                          margin:
+                                              EdgeInsets.only(left: 0, top: 5),
+                                          child: Text(
+                                            "Краснодар, Краснодарский Край, Россия",
+                                            style:
+                                                TextStyle(color: Colors.grey),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ],
@@ -497,235 +499,245 @@ class _SearchPage extends State<SearchPage> {
     DateTime _dateTime;
 
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Container(
-            width: m_ScreenSize.width,
-            height: m_ScreenSize.height * .915,
-            decoration: BoxDecoration(color: Color.fromARGB(500, 22, 141, 207)),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: m_ScreenSize.height * .10,
-                  ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: m_ScreenSize.width,
-                    child: Text(
-                      "Поиск подходящего тура",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+              width: m_ScreenSize.width,
+              height: m_ScreenSize.height * .915,
+              decoration:
+                  BoxDecoration(color: Color.fromARGB(500, 22, 141, 207)),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: m_ScreenSize.height * .10,
+                    ),
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: m_ScreenSize.width,
+                      child: Text(
+                        "Поиск подходящего тура",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: m_ScreenSize.height * .15,
-                  ),
-                  child: Container(
-                    width: m_ScreenSize.width,
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          alignment: Alignment.center,
-                          width: m_ScreenSize.width * .95,
-                          height: m_ScreenSize.height * .065,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(100)),
-                          child: Column(
-                            children: <Widget>[
-                              Stack(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 20,
-                                          top: 0,
-                                          right: 0,
-                                          bottom: 0),
-                                      child: FlatButton(
-                                        highlightColor: Colors.transparent,
-                                        splashColor: Colors.transparent,
-                                        onPressed: () {
-                                          _openPlaceSelect(context);
-                                        },
-                                        child: Text(
-                                          'Куда, RU',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 0, top: 0, right: 0, bottom: 0),
-                                      child: FlatButton(
-                                        highlightColor: Colors.transparent,
-                                        splashColor: Colors.transparent,
-                                        onPressed: () {},
-                                        child: Icon(Icons.location_on_sharp),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 10),
-                          width: m_ScreenSize.width * .95,
-                          height: m_ScreenSize.height * .065,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(100)),
-                          child: Column(
-                            children: <Widget>[
-                              Stack(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 20,
-                                          top: 0,
-                                          right: 0,
-                                          bottom: 0),
-                                      child: FlatButton(
-                                        highlightColor: Colors.transparent,
-                                        splashColor: Colors.transparent,
-                                        onPressed: () {
-                                          showDatePicker(
-                                            context: context,
-                                            initialDate: _dateTime == null
-                                                ? DateTime.now()
-                                                : _dateTime,
-                                            firstDate: DateTime.now(),
-                                            lastDate: DateTime(2021),
-                                          ).then((date) {
-                                            setState(() {
-                                              _dateTime = date;
-                                            });
-                                          });
-                                        },
-                                        child: Text(
-                                          _dateTime == null
-                                              ? DateTime.now().day.toString()
-                                              : _dateTime.day.toString(),
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 0, top: 0, right: 0, bottom: 0),
-                                      child: FlatButton(
-                                        highlightColor: Colors.transparent,
-                                        splashColor: Colors.transparent,
-                                        onPressed: () {},
-                                        child: Icon(Icons.calendar_today),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 10),
-                          width: m_ScreenSize.width * .95,
-                          height: m_ScreenSize.height * .065,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(100)),
-                          child: Column(
-                            children: <Widget>[
-                              Stack(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 20,
-                                          top: 0,
-                                          right: 0,
-                                          bottom: 0),
-                                      child: FlatButton(
-                                        highlightColor: Colors.transparent,
-                                        splashColor: Colors.transparent,
-                                        onPressed: () {
-                                          _openPassangerSelect(context);
-                                        },
-                                        child: Text(
-                                          '1 Пассажир, Возрослый',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 0, top: 0, right: 0, bottom: 0),
-                                      child: FlatButton(
-                                        highlightColor: Colors.transparent,
-                                        splashColor: Colors.transparent,
-                                        onPressed: () {},
-                                        child: Icon(Icons.people_alt),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 10),
-                          width: m_ScreenSize.width * .95,
-                          height: m_ScreenSize.height * .08,
-                          decoration: BoxDecoration(
-                              color: Color.fromARGB(200, 43, 227, 107),
-                              borderRadius: BorderRadius.circular(100)),
-                          child: FlatButton(
-                            onPressed: () {},
-                            child: Text(
-                              "Найти",
-                              style: TextStyle(
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: m_ScreenSize.height * .15,
+                    ),
+                    child: Container(
+                      width: m_ScreenSize.width,
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.center,
+                            width: m_ScreenSize.width * .95,
+                            height: m_ScreenSize.height * .066,
+                            decoration: BoxDecoration(
                                 color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                                borderRadius: BorderRadius.circular(100)),
+                            child: Column(
+                              children: <Widget>[
+                                Stack(
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 20,
+                                            top: 0,
+                                            right: 0,
+                                            bottom: 0),
+                                        child: FlatButton(
+                                          highlightColor: Colors.transparent,
+                                          splashColor: Colors.transparent,
+                                          onPressed: () {
+                                            _openPlaceSelect(context);
+                                          },
+                                          child: Text(
+                                            'Куда, RU',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 0,
+                                            top: 0,
+                                            right: 0,
+                                            bottom: 0),
+                                        child: FlatButton(
+                                          highlightColor: Colors.transparent,
+                                          splashColor: Colors.transparent,
+                                          onPressed: () {},
+                                          child: Icon(Icons.location_on_sharp),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            width: m_ScreenSize.width * .95,
+                            height: m_ScreenSize.height * .066,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(100)),
+                            child: Column(
+                              children: <Widget>[
+                                Stack(
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 20,
+                                            top: 0,
+                                            right: 0,
+                                            bottom: 0),
+                                        child: FlatButton(
+                                          highlightColor: Colors.transparent,
+                                          splashColor: Colors.transparent,
+                                          onPressed: () {
+                                            showDatePicker(
+                                              context: context,
+                                              initialDate: _dateTime == null
+                                                  ? DateTime.now()
+                                                  : _dateTime,
+                                              firstDate: DateTime.now(),
+                                              lastDate: DateTime(2021),
+                                            ).then((date) {
+                                              setState(() {
+                                                _dateTime = date;
+                                              });
+                                            });
+                                          },
+                                          child: Text(
+                                            "30 Октября, Птяница",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 0,
+                                            top: 0,
+                                            right: 0,
+                                            bottom: 0),
+                                        child: FlatButton(
+                                          highlightColor: Colors.transparent,
+                                          splashColor: Colors.transparent,
+                                          onPressed: () {},
+                                          child: Icon(Icons.calendar_today),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            width: m_ScreenSize.width * .95,
+                            height: m_ScreenSize.height * .066,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(100)),
+                            child: Column(
+                              children: <Widget>[
+                                Stack(
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 20,
+                                            top: 0,
+                                            right: 0,
+                                            bottom: 0),
+                                        child: FlatButton(
+                                          highlightColor: Colors.transparent,
+                                          splashColor: Colors.transparent,
+                                          onPressed: () {
+                                            _openPassangerSelect(context);
+                                          },
+                                          child: Text(
+                                            '1 Пассажир, Возрослый',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 0,
+                                            top: 0,
+                                            right: 0,
+                                            bottom: 0),
+                                        child: FlatButton(
+                                          highlightColor: Colors.transparent,
+                                          splashColor: Colors.transparent,
+                                          onPressed: () {},
+                                          child: Icon(Icons.people_alt),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            width: m_ScreenSize.width * .95,
+                            height: m_ScreenSize.height * .08,
+                            decoration: BoxDecoration(
+                                color: Color.fromARGB(200, 43, 227, 107),
+                                borderRadius: BorderRadius.circular(100)),
+                            child: FlatButton(
+                              onPressed: () {},
+                              child: Text(
+                                "Найти",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

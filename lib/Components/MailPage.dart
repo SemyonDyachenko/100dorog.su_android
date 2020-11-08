@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'Widgets/ProfileWidgets/ProfileSignup.dart';
+
 class MailPage extends StatelessWidget {
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => MailPage(),
@@ -8,8 +10,100 @@ class MailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text('This mail page'),
+      appBar: AppBar(
+        title: Text("Уведомления", style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
+      ),
+      body: Column(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width,
+            margin:
+                EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.05),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  height: 10,
+                  decoration: BoxDecoration(
+                      color: Colors.red[300],
+                      borderRadius: BorderRadius.circular(100)),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.36,
+                  margin: EdgeInsets.only(top: 10, bottom: 10),
+                  height: 10,
+                  decoration: BoxDecoration(
+                      color: Colors.green[200],
+                      borderRadius: BorderRadius.circular(100)),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.32,
+                  height: 10,
+                  decoration: BoxDecoration(
+                      color: Colors.blue[200],
+                      borderRadius: BorderRadius.circular(100)),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 40, bottom: 10),
+            width: MediaQuery.of(context).size.width,
+            alignment: Alignment.center,
+            child: Text(
+              "Создайте аккаунт",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * .9,
+            alignment: Alignment.center,
+            child: Text(
+              'Войдите в профиль или зарегестрируйтесь чтобы получать уведомления о новых поездках',
+              style: TextStyle(
+                color: Colors.grey[600],
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * .9,
+            height: 50,
+            decoration: BoxDecoration(
+              color: Color.fromARGB(500, 48, 222, 130),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            margin:
+                EdgeInsets.only(top: MediaQuery.of(context).size.height * .45),
+            alignment: Alignment.center,
+            child: ClipRRect(
+              child: FlatButton(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                minWidth: MediaQuery.of(context).size.width * .9,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return ProfileSignup();
+                      },
+                    ),
+                  );
+                },
+                child: Text(
+                  "Регистрация",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }

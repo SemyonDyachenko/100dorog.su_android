@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travel/Components/Widgets/ProfileWidgets/ProfileSignup.dart';
 import 'Widgets/ProfileWidgets/ProfileIntroduce.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -10,7 +11,11 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
 
-    return Scaffold(body: ProfileIntroduce());
+    /*return Scaffold(
+        body: SafeArea(
+      child: ProfileSignup(),
+    ));*/
+    return ProfileSignup();
   }
 }
 
