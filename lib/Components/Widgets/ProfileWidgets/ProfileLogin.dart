@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../api/auth/auth_services.dart';
 
 class ProfileLogin extends StatefulWidget {
   _ProfileLogin createState() => _ProfileLogin();
@@ -6,6 +8,36 @@ class ProfileLogin extends StatefulWidget {
 
 class _ProfileLogin extends State<ProfileLogin> {
   bool _rememberMe = true;
+
+  final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  String authErrorCode = " ";
+
+  void changeErrorCode(String code) {
+    switch (code) {
+      case 'password':
+        setState(() {
+          authErrorCode = "Пароль наверный";
+        });
+        break;
+      case 'none':
+        setState(() {
+          authErrorCode = "Пользователя с таким телефоном не существует";
+        });
+        break;
+      case 'error':
+        setState(() {
+          authErrorCode = "Ошибка авторизации";
+        });
+        break;
+      case 'success':
+        setState(() {
+          authErrorCode = " ";
+        });
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +87,7 @@ class _ProfileLogin extends State<ProfileLogin> {
                       ],
                     ),
                     child: TextField(
+                      controller: _phoneController,
                       keyboardType: TextInputType.phone,
                       style: TextStyle(color: Colors.black),
                       decoration: InputDecoration(
@@ -95,6 +128,7 @@ class _ProfileLogin extends State<ProfileLogin> {
                       ],
                     ),
                     child: TextField(
+                      controller: _passwordController,
                       obscureText: true,
                       style: TextStyle(color: Colors.black),
                       decoration: InputDecoration(
@@ -110,6 +144,16 @@ class _ProfileLogin extends State<ProfileLogin> {
                     ),
                   ),
                 ],
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 5, bottom: 0),
+                alignment: Alignment.center,
+                width: m_ScreenSize.width,
+                child: Text(
+                  "$authErrorCode",
+                  style: TextStyle(color: Colors.red),
+                  textAlign: TextAlign.center,
+                ),
               ),
               Container(
                 child: Row(
@@ -136,7 +180,13 @@ class _ProfileLogin extends State<ProfileLogin> {
                 width: double.infinity,
                 child: RaisedButton(
                   elevation: 5.0,
-                  onPressed: () => print("Login Button Pressed"),
+                  onPressed: () {
+                    loginUser(_phoneController.text, _passwordController.text)
+                        .then((value) {
+                      changeErrorCode(value);
+                      if (value == "success") {}
+                    });
+                  },
                   padding: EdgeInsets.all(15.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
@@ -162,14 +212,14 @@ class _ProfileLogin extends State<ProfileLogin> {
                       TextSpan(
                         text: "Нет аккаунта ? ",
                         style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.blue,
                             fontSize: 15.0,
                             fontWeight: FontWeight.w400),
                       ),
                       TextSpan(
                         text: " Регистрация",
                         style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.blue,
                             fontSize: 15.0,
                             fontWeight: FontWeight.w400),
                       ),

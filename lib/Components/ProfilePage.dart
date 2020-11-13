@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/ProfileSignup.dart';
 import 'Widgets/ProfileWidgets/ProfileIntroduce.dart';
+import 'Widgets/ProfileWidgets/ProfileWidget.dart';
 
 class ProfilePage extends StatelessWidget {
   static Route<dynamic> route() => MaterialPageRoute(
@@ -15,7 +16,7 @@ class ProfilePage extends StatelessWidget {
         body: SafeArea(
       child: ProfileSignup(),
     ));*/
-    return ProfileSignup();
+    return ProfileWidget();
   }
 }
 

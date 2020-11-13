@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 import 'ProfileLogin.dart';
+import '../../../api/auth/auth_services.dart';
 
 class ProfileSignup extends StatefulWidget {
   _ProfileSignup createState() => _ProfileSignup();
@@ -11,6 +12,231 @@ class _ProfileSignup extends State<ProfileSignup> {
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
+  Widget _buildPhoneTextField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "Телефон",
+          style: TextStyle(color: Colors.black),
+        ),
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          height: 60.0,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6.0,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: TextFormField(
+            controller: _phoneController,
+            validator: (text) {
+              _phoneValidator(text);
+            },
+            keyboardType: TextInputType.phone,
+            style: TextStyle(color: Colors.black),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.phone_outlined,
+                color: Colors.black,
+              ),
+              hintText: "Номер телефона",
+              hintStyle: TextStyle(color: Colors.black54),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPasswordTextField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "Пароль",
+          style: TextStyle(color: Colors.black),
+        ),
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          height: 60.0,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6.0,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: TextFormField(
+            controller: _passwordController,
+            validator: (text) {
+              _passwordValidator(text);
+            },
+            obscureText: true,
+            style: TextStyle(color: Colors.black),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.lock,
+                color: Colors.black,
+              ),
+              hintText: "Введите пароль",
+              hintStyle: TextStyle(color: Colors.black54),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRePasswordTextField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "Повтор пароля",
+          style: TextStyle(color: Colors.black),
+        ),
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          height: 60.0,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6.0,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: TextFormField(
+            obscureText: true,
+            validator: (text) {
+              if (text != _passwordController.text) {
+                return "Пароли не совпадают";
+              }
+            },
+            keyboardType: TextInputType.visiblePassword,
+            style: TextStyle(color: Colors.black),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.lock,
+                color: Colors.black,
+              ),
+              hintText: "Повтор пароля",
+              hintStyle: TextStyle(color: Colors.black54),
+            ),
+          ),
+        ),
+        SizedBox(height: 25.0),
+      ],
+    );
+  }
+
+  Widget _buildRememberMe() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          Theme(
+            data: ThemeData(unselectedWidgetColor: Colors.white),
+            child: Checkbox(
+              value: _rememberMe,
+              checkColor: Colors.black,
+              activeColor: Colors.white,
+              onChanged: (value) {
+                setState(() {
+                  _rememberMe = value;
+                });
+              },
+            ),
+          ),
+          Text("Запомнить меня"),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSignupButton() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 20),
+      width: double.infinity,
+      child: RaisedButton(
+        elevation: 5.0,
+        onPressed: () {
+          registerUser(
+              _phoneController.text, _passwordController.text, _rememberMe);
+        },
+        padding: EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        color: Color.fromARGB(500, 0, 132, 255),
+        child: Text("Регистрация",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 1.5,
+            )),
+      ),
+    );
+  }
+
+  Widget _buildLoginButton() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return ProfileLogin();
+            },
+          ),
+        );
+      },
+      child: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: "Уже есть аккаунт ? ",
+              style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w400),
+            ),
+            TextSpan(
+              text: " Войти",
+              style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w400),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   void dispose() {
@@ -43,213 +269,15 @@ class _ProfileSignup extends State<ProfileSignup> {
                 ),
               ),
               SizedBox(height: 30),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Телефон",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  SizedBox(height: 10.0),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    height: 60.0,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 6.0,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      controller: _phoneController,
-                      validator: (text) {
-                        _phoneValidator(text);
-                      },
-                      keyboardType: TextInputType.phone,
-                      style: TextStyle(color: Colors.black),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.only(top: 14.0),
-                        prefixIcon: Icon(
-                          Icons.phone_outlined,
-                          color: Colors.black,
-                        ),
-                        hintText: "Номер телефона",
-                        hintStyle: TextStyle(color: Colors.black54),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _buildPhoneTextField(),
               SizedBox(height: 20.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Пароль",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  SizedBox(height: 10.0),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    height: 60.0,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 6.0,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      controller: _passwordController,
-                      validator: (text) {
-                        _passwordValidator(text);
-                      },
-                      obscureText: true,
-                      style: TextStyle(color: Colors.black),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.only(top: 14.0),
-                        prefixIcon: Icon(
-                          Icons.lock,
-                          color: Colors.black,
-                        ),
-                        hintText: "Введите пароль",
-                        hintStyle: TextStyle(color: Colors.black54),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _buildPasswordTextField(),
               SizedBox(height: 20.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Повтор пароля",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  SizedBox(height: 10.0),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    height: 60.0,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 6.0,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      obscureText: true,
-                      validator: (text) {
-                        if (text != _passwordController.text) {
-                          return "Пароли не совпадают";
-                        }
-                      },
-                      keyboardType: TextInputType.visiblePassword,
-                      style: TextStyle(color: Colors.black),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.only(top: 14.0),
-                        prefixIcon: Icon(
-                          Icons.lock,
-                          color: Colors.black,
-                        ),
-                        hintText: "Повтор пароля",
-                        hintStyle: TextStyle(color: Colors.black54),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 25.0),
-                ],
-              ),
-              Container(
-                child: Row(
-                  children: <Widget>[
-                    Theme(
-                      data: ThemeData(unselectedWidgetColor: Colors.white),
-                      child: Checkbox(
-                        value: _rememberMe,
-                        checkColor: Colors.black,
-                        activeColor: Colors.white,
-                        onChanged: (value) {
-                          setState(() {
-                            _rememberMe = value;
-                          });
-                        },
-                      ),
-                    ),
-                    Text("Запомнить меня"),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 20),
-                width: double.infinity,
-                child: RaisedButton(
-                  elevation: 5.0,
-                  onPressed: () => print("Login Button Pressed"),
-                  padding: EdgeInsets.all(15.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  color: Color.fromARGB(500, 0, 132, 255),
-                  child: Text("Регистрация",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 1.5,
-                      )),
-                ),
-              ),
+              _buildRePasswordTextField(),
+              _buildRememberMe(),
               SizedBox(height: 10),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return ProfileLogin();
-                      },
-                    ),
-                  );
-                },
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Уже есть аккаунт ? ",
-                        style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w400),
-                      ),
-                      TextSpan(
-                        text: " Войти",
-                        style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              _buildSignupButton(),
+              _buildLoginButton(),
             ],
           ),
         ),

@@ -37,7 +37,7 @@ class _TourWidget extends State<TourWidget> {
               alignment: Alignment.topCenter,
               child: Container(
                 alignment: Alignment.topCenter,
-                margin: EdgeInsets.only(left: 25, right: 25),
+                margin: EdgeInsets.only(left: 15, right: 15),
                 child: Text(
                   "Дворцовое ожерелье Крыма",
                   style: TextStyle(
@@ -132,7 +132,7 @@ class _TourWidget extends State<TourWidget> {
                           child: Text(
                             "2500 / 1300 RUB",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.normal,
                               color: Colors.black,
                             ),
@@ -165,7 +165,7 @@ class _TourWidget extends State<TourWidget> {
                           child: Text(
                             "Взрослый / Ребенок",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.normal,
                               color: Colors.black,
                             ),
@@ -181,8 +181,11 @@ class _TourWidget extends State<TourWidget> {
                         Container(
                           margin: EdgeInsets.only(right: 0, top: 0),
                           child: FlatButton(
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
                               onPressed: () {},
-                              child: Icon(Icons.favorite_outline_rounded)),
+                              child: Icon(Icons.favorite_outline_rounded,
+                                  color: Colors.black)),
                         ),
                       ],
                     ),

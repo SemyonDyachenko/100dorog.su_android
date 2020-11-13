@@ -174,70 +174,62 @@ class _MainPage extends State<MainPage> {
                                   vertical: 20, horizontal: 20),
                               child: Row(
                                 children: <Widget>[
-                                  FlatButton(
-                                    highlightColor: Colors.transparent,
-                                    splashColor: Colors.transparent,
-                                    minWidth: m_ScreenSize.width / 3,
-                                    padding: EdgeInsets.all(0),
-                                    onPressed: () {},
-                                    child: Container(
-                                      margin:
-                                          EdgeInsets.only(left: 0, right: 7),
-                                      width: m_ScreenSize.width / 3,
-                                      height: 142,
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(7),
-                                        image: DecorationImage(
-                                          image:
-                                              AssetImage("assets/Istanbul.jpg"),
-                                          fit: BoxFit.cover,
+                                  for (var i in text)
+                                    FlatButton(
+                                      highlightColor: Colors.transparent,
+                                      splashColor: Colors.transparent,
+                                      minWidth: m_ScreenSize.width / 3,
+                                      padding: EdgeInsets.all(0),
+                                      onPressed: () {},
+                                      child: Container(
+                                        margin:
+                                            EdgeInsets.only(left: 0, right: 7),
+                                        width: m_ScreenSize.width / 3,
+                                        height: 142,
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                                'https://static.tildacdn.com/tild6330-3661-4466-a132-663932353937/j8NgysiE04c.jpg'),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: <Widget>[
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  left: 5, bottom: 0),
+                                              alignment: Alignment.bottomLeft,
+                                              child: Text(
+                                                "Орлиная полка",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  left: 5, bottom: 5),
+                                              alignment: Alignment.bottomLeft,
+                                              child: Text(
+                                                "1600 RUB",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 7, right: 7),
-                                    width: m_ScreenSize.width / 3,
-                                    height: 142,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(7),
-                                      image: DecorationImage(
-                                        image:
-                                            AssetImage("assets/Istanbul.jpg"),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 7, right: 7),
-                                    width: m_ScreenSize.width / 3,
-                                    height: 142,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(7),
-                                      image: DecorationImage(
-                                        image:
-                                            AssetImage("assets/Istanbul.jpg"),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 7, right: 7),
-                                    width: m_ScreenSize.width / 3,
-                                    height: 142,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(7),
-                                      image: DecorationImage(
-                                        image:
-                                            AssetImage("assets/Istanbul.jpg"),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
@@ -282,62 +274,62 @@ class _MainPage extends State<MainPage> {
                                   vertical: 20, horizontal: 20),
                               child: Row(
                                 children: <Widget>[
-                                  Container(
-                                    margin: EdgeInsets.only(left: 0, right: 7),
-                                    width: m_ScreenSize.width / 3,
-                                    height: 142,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(7),
-                                      image: DecorationImage(
-                                        image:
-                                            AssetImage("assets/Istanbul.jpg"),
-                                        fit: BoxFit.cover,
+                                  for (var i in text)
+                                    FlatButton(
+                                      highlightColor: Colors.transparent,
+                                      splashColor: Colors.transparent,
+                                      minWidth: m_ScreenSize.width / 3,
+                                      padding: EdgeInsets.all(0),
+                                      onPressed: () {},
+                                      child: Container(
+                                        margin:
+                                            EdgeInsets.only(left: 0, right: 7),
+                                        width: m_ScreenSize.width / 3,
+                                        height: 142,
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                                'https://static.tildacdn.com/tild3335-3636-4838-b062-356132383730/2951045.jpg'),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: <Widget>[
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  left: 5, bottom: 0),
+                                              alignment: Alignment.bottomLeft,
+                                              child: Text(
+                                                "Крым",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  left: 5, bottom: 5),
+                                              alignment: Alignment.bottomLeft,
+                                              child: Text(
+                                                "5500 RUB",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 7, right: 7),
-                                    width: m_ScreenSize.width / 3,
-                                    height: 142,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(7),
-                                      image: DecorationImage(
-                                        image:
-                                            AssetImage("assets/Istanbul.jpg"),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 7, right: 7),
-                                    width: m_ScreenSize.width / 3,
-                                    height: 142,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(7),
-                                      image: DecorationImage(
-                                        image:
-                                            AssetImage("assets/Istanbul.jpg"),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 7, right: 7),
-                                    width: m_ScreenSize.width / 3,
-                                    height: 142,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(7),
-                                      image: DecorationImage(
-                                        image:
-                                            AssetImage("assets/Istanbul.jpg"),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
