@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:travel/api/auth/preferences.dart';
 import 'ProfileLogin.dart';
 import '../../../api/auth/auth_services.dart';
 
@@ -8,10 +9,35 @@ class UserDataWidget extends StatefulWidget {
 }
 
 class _UserDataWidget extends State<UserDataWidget> {
-  TextEditingController _firstnameController = new TextEditingController();
-  TextEditingController _lastnameController = new TextEditingController();
-  TextEditingController _emailController = new TextEditingController();
+  String _firstname, _lastname, _email;
+  TextEditingController _firstnameController;
+  TextEditingController _lastnameController;
+  TextEditingController _emailController;
   TextEditingController _datebornControler = new TextEditingController();
+
+  @override
+  void initState() {
+    getStringFromSharedPrefs("user_email").then((value) {
+      setState(() {
+        _email = value;
+        _emailController = new TextEditingController(text: _email);
+      });
+    });
+
+    getStringFromSharedPrefs("lastname").then((value) {
+      setState(() {
+        _lastname = value;
+        _lastnameController = new TextEditingController(text: _lastname);
+      });
+    });
+
+    getStringFromSharedPrefs("firstname").then((value) {
+      setState(() {
+        _firstname = value;
+        _firstnameController = new TextEditingController(text: _firstname);
+      });
+    });
+  }
 
   Widget _buildFirstNameField() {
     return Column(

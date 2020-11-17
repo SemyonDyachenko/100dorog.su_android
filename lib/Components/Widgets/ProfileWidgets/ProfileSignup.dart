@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:travel/api/auth/preferences.dart';
 import 'ProfileLogin.dart';
 import '../../../api/auth/auth_services.dart';
 
@@ -248,41 +249,59 @@ class _ProfileSignup extends State<ProfileSignup> {
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
 
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(top: 80, left: 40, right: 40),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(top: 10),
-                alignment: Alignment.center,
-                width: m_ScreenSize.width,
-                child: Text(
-                  'Регистрация',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'OpenSans',
-                    fontSize: 30,
+    bool _login = true;
+
+    getStringFromSharedPrefs('user_phone').then((value) {
+      if (value == null) {
+        setState(() {
+          _login = false;
+        });
+      } else {
+        setState(() {
+          _login = true;
+        });
+      }
+    });
+
+    if (_login) {
+      return Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.only(top: 80, left: 40, right: 40),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  alignment: Alignment.center,
+                  width: m_ScreenSize.width,
+                  child: Text(
+                    'Регистрация',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'OpenSans',
+                      fontSize: 30,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 30),
-              _buildPhoneTextField(),
-              SizedBox(height: 20.0),
-              _buildPasswordTextField(),
-              SizedBox(height: 20.0),
-              _buildRePasswordTextField(),
-              _buildRememberMe(),
-              SizedBox(height: 10),
-              _buildSignupButton(),
-              _buildLoginButton(),
-            ],
+                SizedBox(height: 30),
+                _buildPhoneTextField(),
+                SizedBox(height: 20.0),
+                _buildPasswordTextField(),
+                SizedBox(height: 20.0),
+                _buildRePasswordTextField(),
+                _buildRememberMe(),
+                SizedBox(height: 10),
+                _buildSignupButton(),
+                _buildLoginButton(),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      Navigator.pop(context);
+    }
   }
 
   String _phoneValidator(String value) {

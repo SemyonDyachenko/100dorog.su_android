@@ -537,11 +537,12 @@ class _SearchPage extends State<SearchPage> {
                           Container(
                             alignment: Alignment.center,
                             width: m_ScreenSize.width * .95,
-                            height: m_ScreenSize.height * .066,
+                            height: 55,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(100)),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Stack(
                                   children: <Widget>[
@@ -592,11 +593,12 @@ class _SearchPage extends State<SearchPage> {
                           Container(
                             margin: EdgeInsets.only(top: 10),
                             width: m_ScreenSize.width * .95,
-                            height: m_ScreenSize.height * .066,
+                            height: 55,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(100)),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Stack(
                                   children: <Widget>[
@@ -658,11 +660,12 @@ class _SearchPage extends State<SearchPage> {
                           Container(
                             margin: EdgeInsets.only(top: 10),
                             width: m_ScreenSize.width * .95,
-                            height: m_ScreenSize.height * .066,
+                            height: 60,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(100)),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Stack(
                                   children: <Widget>[

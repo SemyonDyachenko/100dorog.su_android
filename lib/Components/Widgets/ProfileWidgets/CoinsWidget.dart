@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'AboutCoinsWidget.dart';
 import 'ProfileLogin.dart';
 import '../../../api/auth/auth_services.dart';
 
@@ -121,12 +122,23 @@ class _CoinsWidget extends State<CoinsWidget> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  Text(
-                    "Узнать про бонусы",
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                  FlatButton(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return AboutCoinsWidget();
+                        },
+                      ));
+                    },
+                    child: Text(
+                      "Узнать про бонусы",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],

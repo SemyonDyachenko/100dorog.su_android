@@ -1,12 +1,171 @@
 import 'package:flutter/material.dart';
+import 'package:travel/Components/Widgets/OrderWidgets.dart/ConfirmOrder.dart';
+import 'package:travel/Components/Widgets/ProfileWidgets/ProfileLogin.dart';
+import 'package:travel/Components/Widgets/ProfileWidgets/ProfileSignup.dart';
+import 'package:travel/api/auth/preferences.dart';
 
 class TourWidget extends StatefulWidget {
   _TourWidget createState() => _TourWidget();
 }
 
 class _TourWidget extends State<TourWidget> {
+  var _register;
+
+  void showLoginNavigator(BuildContext context) {
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: const Radius.circular(10),
+              topRight: const Radius.circular(10),
+              bottomLeft: const Radius.circular(0),
+              bottomRight: const Radius.circular(0)),
+        ),
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return new Container(
+              height: MediaQuery.of(context).size.height * .36, // .35
+              color:
+                  Colors.transparent, //could change this to Color(0xFF737373),
+              //so you don't have to change MaterialApp canvasColor
+              child: new Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(top: 10),
+                      alignment: Alignment.topCenter,
+                      width: 50.0,
+                      height: 6.0,
+                      decoration: BoxDecoration(
+                          color: Color.fromARGB(500, 210, 210, 210),
+                          borderRadius: BorderRadius.circular(15)),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 10),
+                      alignment: Alignment.topCenter,
+                      child: Text(
+                        "Вы не авторизированы",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 15),
+                      width: MediaQuery.of(context).size.width,
+                      height: 1,
+                      alignment: Alignment.topCenter,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromARGB(200, 225, 225, 225)
+                                .withOpacity(0.5),
+                            spreadRadius: 0.1,
+                            blurRadius: 0,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 20),
+                      width: MediaQuery.of(context).size.width,
+                      child: Stack(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.center,
+                            child: FlatButton(
+                              minWidth: 200,
+                              height: 50,
+                              onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return ProfileSignup();
+                                }));
+                              },
+                              padding: EdgeInsets.all(10.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100.0),
+                              ),
+                              color: Color.fromARGB(500, 0, 132, 255),
+                              child: Text("Регистрация",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: 1.5,
+                                  )),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 20),
+                      width: MediaQuery.of(context).size.width,
+                      child: Stack(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.center,
+                            child: FlatButton(
+                              minWidth: 200,
+                              height: 50,
+                              onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return ProfileLogin();
+                                }));
+                              },
+                              padding: EdgeInsets.all(10.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100.0),
+                              ),
+                              color: Color.fromARGB(500, 0, 132, 255),
+                              child: Text("Войти",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: 1.5,
+                                  )),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 10),
+                      alignment: Alignment.topCenter,
+                      child: FlatButton(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("Закрыть",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
+                            )),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          });
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
+    getStringFromSharedPrefs("user_phone").then((value) {
+      _register = value;
+    });
+
     var m_ScreenSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -298,7 +457,7 @@ class _TourWidget extends State<TourWidget> {
                       )),
                   Container(
                     alignment: Alignment.center,
-                    margin: EdgeInsets.only(top: 15, bottom: 5),
+                    margin: EdgeInsets.only(top: 20, bottom: 10),
                     child: FlatButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6.0),
@@ -306,7 +465,18 @@ class _TourWidget extends State<TourWidget> {
                       minWidth: m_ScreenSize.width * .95,
                       height: 60,
                       color: Color.fromARGB(500, 0, 140, 255),
-                      onPressed: () {},
+                      onPressed: () {
+                        if (_register != null) {
+                          // if sign un
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return ConfirmOrder();
+                          }));
+                        } else {
+                          // if not sign in
+                          showLoginNavigator(context);
+                        }
+                      },
                       child: Text("Забронировать",
                           style: TextStyle(
                             color: Colors.white,

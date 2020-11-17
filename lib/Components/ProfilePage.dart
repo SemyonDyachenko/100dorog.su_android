@@ -1,22 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/ProfileSignup.dart';
+import 'package:travel/api/auth/preferences.dart';
 import 'Widgets/ProfileWidgets/ProfileIntroduce.dart';
 import 'Widgets/ProfileWidgets/ProfileWidget.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => ProfilePage(),
       );
+  _ProfilePage createState() => _ProfilePage();
+}
+
+class _ProfilePage extends State<ProfilePage> {
+  var _register;
 
   @override
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
 
+    getStringFromSharedPrefs("user_phone").then((value) {
+      _register = value;
+    });
+
     /*return Scaffold(
         body: SafeArea(
       child: ProfileSignup(),
     ));*/
-    return ProfileWidget();
+
+    if (_register == null) {
+      return ProfileSignup();
+    } else {
+      return ProfileWidget();
+    }
   }
 }
 

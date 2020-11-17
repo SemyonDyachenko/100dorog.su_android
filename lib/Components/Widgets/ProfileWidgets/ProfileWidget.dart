@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:travel/Components/Widgets/ProfileWidgets/NotificationWidget.dart';
+import 'package:travel/Components/Widgets/ProfileWidgets/RegionSettings.dart';
+import 'package:travel/api/auth/auth_services.dart';
+import 'package:travel/api/auth/preferences.dart';
 import 'CoinsWidget.dart';
+import 'ProfileSettings.dart';
 import 'UserDataWidget.dart';
 import 'ProfileSignup.dart';
 
@@ -9,8 +14,65 @@ class ProfileWidget extends StatefulWidget {
 }
 
 class _ProfileWidget extends State<ProfileWidget> {
-  Widget _buildSettingsElement(
-      BuildContext context, String title, String value) {
+  String _firstname, _lastname, _phone;
+
+  Widget _buildSettingsElement() {
+    return FlatButton(
+      minWidth: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(0),
+      color: Colors.white,
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return ProfileSettings();
+            },
+          ),
+        );
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: 60,
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(width: 1, color: Colors.grey[300]),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(
+                left: 20,
+              ),
+              child: Text(
+                "Насройки профиля",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                right: 20,
+              ),
+              child: Text(
+                "",
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMoneyElement() {
     return FlatButton(
       minWidth: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(0),
@@ -32,7 +94,7 @@ class _ProfileWidget extends State<ProfileWidget> {
                 left: 20,
               ),
               child: Text(
-                title,
+                "Язык",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 16,
@@ -44,7 +106,119 @@ class _ProfileWidget extends State<ProfileWidget> {
                 right: 20,
               ),
               child: Text(
-                value,
+                "Русский",
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNotificationElement() {
+    return FlatButton(
+      minWidth: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(0),
+      color: Colors.white,
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return NotificationWidget();
+            },
+          ),
+        );
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: 60,
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(width: 1, color: Colors.grey[300]),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(
+                left: 20,
+              ),
+              child: Text(
+                "Уведомления",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                right: 20,
+              ),
+              child: Text(
+                "Все",
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRegionElement() {
+    return FlatButton(
+      minWidth: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(0),
+      color: Colors.white,
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return RegionSettings();
+            },
+          ),
+        );
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: 60,
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(width: 1, color: Colors.grey[300]),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(
+                left: 20,
+              ),
+              child: Text(
+                "Регион",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                right: 20,
+              ),
+              child: Text(
+                "Абинск",
                 style: TextStyle(
                   color: Colors.blue,
                   fontSize: 16,
@@ -82,13 +256,114 @@ class _ProfileWidget extends State<ProfileWidget> {
                     )),
               ),
               FlatButton(
-                onPressed: () {},
+                onPressed: () {
+                  logoutUser();
+                },
                 color: Color.fromARGB(200, 247, 72, 72),
                 child: Text("Да"),
               ),
             ],
           );
         });
+  }
+
+  Widget buildPersonalInfoContainer(BuildContext context) {
+    getStringFromSharedPrefs("user_phone").then((value) {
+      setState(() {
+        _phone = value;
+      });
+    });
+
+    getStringFromSharedPrefs("firstname").then((value) {
+      setState(() {
+        _firstname = value;
+      });
+    });
+
+    getStringFromSharedPrefs("lastname").then((value) {
+      setState(() {
+        _lastname = value;
+      });
+    });
+
+    return FlatButton(
+      color: Colors.white,
+      minWidth: MediaQuery.of(context).size.width,
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return UserDataWidget();
+            },
+          ),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.only(top: 15, left: 0, bottom: 15, right: 0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              width: 70,
+              height: 70,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.blue[300],
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Text(
+                "SD",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                      _firstname == null
+                          ? _phone
+                          : _firstname + " " + _lastname,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      )),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  Text(
+                    'контактные данные',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                margin: EdgeInsets.only(left: 100),
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 14,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -123,82 +398,7 @@ class _ProfileWidget extends State<ProfileWidget> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            FlatButton(
-              color: Colors.white,
-              minWidth: m_ScreenSize.width,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return UserDataWidget();
-                    },
-                  ),
-                );
-              },
-              child: Container(
-                padding:
-                    EdgeInsets.only(top: 15, left: 0, bottom: 15, right: 0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      width: 70,
-                      height: 70,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.blue[300],
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Text(
-                        "SD",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Ivan Ivanov',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              )),
-                          SizedBox(
-                            height: 3,
-                          ),
-                          Text(
-                            'контактные данные',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        margin: EdgeInsets.only(left: 100),
-                        child: Icon(
-                          Icons.arrow_forward_ios,
-                          size: 14,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            buildPersonalInfoContainer(context),
             SizedBox(height: 5),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -275,10 +475,10 @@ class _ProfileWidget extends State<ProfileWidget> {
               ),
             ),
             SizedBox(height: 20),
-            _buildSettingsElement(context, "Регион", "Абинск"),
-            _buildSettingsElement(context, "Валюта", "RUB"),
-            _buildSettingsElement(context, "Уведомления", "Все"),
-            _buildSettingsElement(context, "Настройки профиля", ""),
+            _buildRegionElement(),
+            _buildMoneyElement(),
+            _buildNotificationElement(),
+            _buildSettingsElement(),
             SizedBox(height: 10),
             Container(
               padding: EdgeInsets.only(left: 20, right: 20, bottom: 5),
