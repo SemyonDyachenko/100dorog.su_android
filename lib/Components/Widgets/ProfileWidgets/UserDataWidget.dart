@@ -242,7 +242,21 @@ class _UserDataWidget extends State<UserDataWidget> {
                 width: double.infinity,
                 child: RaisedButton(
                   elevation: 5.0,
-                  onPressed: () {},
+                  onPressed: () {
+                    getStringFromSharedPrefs("user_phone").then((phone) {
+                      setContacts(phone, _firstnameController.text,
+                              _lastnameController.text, _emailController.text)
+                          .then((value) {
+                        addStringValueToSharedPrefs(
+                            "firstname", _firstnameController.text);
+                        addStringValueToSharedPrefs(
+                            "lastname", _lastnameController.text);
+                        addStringValueToSharedPrefs(
+                            "user_email", _emailController.text);
+                        Navigator.pop(context);
+                      });
+                    });
+                  },
                   padding: EdgeInsets.all(20.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6.0),

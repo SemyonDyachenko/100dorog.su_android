@@ -1,11 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'PrivacyWidget.dart';
+
 class ConfirmOrder extends StatefulWidget {
   _ConfirmOrder createState() => _ConfirmOrder();
 }
 
 class _ConfirmOrder extends State<ConfirmOrder> {
+  var _passengerCount = 1;
+  var _childCount = 0;
+  var _allCount = 1;
+
+  var normalPrice = 4800;
+  var childPrice = 2400;
+
+  var _applyCoins = false;
+
+  void _passenger(bool plus) {
+    setState(() {
+      if (plus) {
+        _passengerCount++;
+      } else {
+        _passengerCount--;
+      }
+      _allUpdate();
+    });
+  }
+
+  void _child(bool plus) {
+    setState(() {
+      if (plus) {
+        _childCount++;
+      } else {
+        _childCount--;
+      }
+      _allUpdate();
+    });
+  }
+
+  void _allUpdate() {
+    setState(() {
+      _allCount = _passengerCount + _childCount;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
@@ -130,7 +169,11 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                                     minWidth: 10,
                                     splashColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      if (_passengerCount > 1) {
+                                        _passenger(false);
+                                      }
+                                    },
                                     child: Icon(
                                       Icons.remove_circle,
                                       size: 30,
@@ -138,14 +181,18 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                                     ),
                                   ),
                                   Text(
-                                    "1",
+                                    _passengerCount.toString(),
                                     style: TextStyle(fontSize: 16),
                                   ),
                                   FlatButton(
                                     minWidth: 10,
                                     splashColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      if (_passengerCount < 5) {
+                                        _passenger(true);
+                                      }
+                                    },
                                     child: Icon(
                                       Icons.add_circle,
                                       size: 30,
@@ -206,7 +253,11 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                                     minWidth: 10,
                                     splashColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      if (_childCount > 0) {
+                                        _child(false);
+                                      }
+                                    },
                                     child: Icon(
                                       Icons.remove_circle,
                                       size: 30,
@@ -214,14 +265,18 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                                     ),
                                   ),
                                   Text(
-                                    "1",
+                                    _childCount.toString(),
                                     style: TextStyle(fontSize: 16),
                                   ),
                                   FlatButton(
                                     minWidth: 10,
                                     splashColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      if (_childCount < 5) {
+                                        _child(true);
+                                      }
+                                    },
                                     child: Icon(
                                       Icons.add_circle,
                                       size: 30,
@@ -300,7 +355,10 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                             ),
                           ),
                           Text(
-                            "4800 ₽",
+                            ((_childCount * childPrice) +
+                                        (_passengerCount * normalPrice))
+                                    .toString() +
+                                " ₽",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -317,23 +375,82 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            "2400₽ x 2 пассажира",
+                            normalPrice.toString() +
+                                " x " +
+                                _passengerCount.toString() +
+                                " (Взрослых)",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 14,
                               fontWeight: FontWeight.normal,
                             ),
                           ),
                           Text(
-                            "4800 ₽",
+                            (_passengerCount * normalPrice).toString() + " ₽",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 14,
                               fontWeight: FontWeight.normal,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 100),
+                    SizedBox(height: 10),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      margin: EdgeInsets.only(left: 20, right: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            childPrice.toString() +
+                                " x " +
+                                _childCount.toString() +
+                                " (Детей)",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          Text(
+                            (_childCount * childPrice).toString() + " ₽",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      margin: EdgeInsets.only(left: 5, right: 20),
+                      child: Row(
+                        children: <Widget>[
+                          Theme(
+                            data:
+                                ThemeData(unselectedWidgetColor: Colors.white),
+                            child: Checkbox(
+                              value: _applyCoins,
+                              checkColor: Colors.black,
+                              activeColor: Colors.grey[200],
+                              hoverColor: Colors.grey[200],
+                              onChanged: (value) {
+                                setState(() {
+                                  _applyCoins = value;
+                                });
+                              },
+                            ),
+                          ),
+                          Text("Списать доступные бонусы ? ",
+                              style: TextStyle(fontSize: 16)),
+                          Text("500",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 50),
                     Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(top: 20, bottom: 10),

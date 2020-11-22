@@ -5,6 +5,11 @@ import 'package:travel/Components/Widgets/ProfileWidgets/ProfileSignup.dart';
 import 'package:travel/api/auth/preferences.dart';
 
 class TourWidget extends StatefulWidget {
+  final int id;
+
+  const TourWidget({Key key, @required this.id}) : super(key: key);
+
+  @override
   _TourWidget createState() => _TourWidget();
 }
 

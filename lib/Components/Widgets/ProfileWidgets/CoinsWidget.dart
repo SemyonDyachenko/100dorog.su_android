@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:travel/api/auth/preferences.dart';
 import 'AboutCoinsWidget.dart';
 import 'ProfileLogin.dart';
 import '../../../api/auth/auth_services.dart';
@@ -9,9 +10,51 @@ class CoinsWidget extends StatefulWidget {
 }
 
 class _CoinsWidget extends State<CoinsWidget> {
+  var _coinsCount = "0";
+  var _coinsText;
+
+  @override
+  void initState() {
+    super.initState();
+    getStringFromSharedPrefs("user_phone").then((phone) {
+      if (phone != null) {
+        getCoins(phone).then((result) {
+          getStringFromSharedPrefs("coins").then((coins) {
+            if (coins == "" || coins == null) {
+              setState(() {
+                addStringValueToSharedPrefs("coins", result);
+                _coinsCount = result;
+                if (int.parse(_coinsCount) > 0) {
+                  _coinsText = "У вас есть доступны бонусы 100 DOROG";
+                } else {
+                  _coinsText = "У вас еще нет бонусов 100 DOROG";
+                }
+              });
+            } else {
+              setState(() {
+                _coinsCount = result;
+                if (int.parse(_coinsCount) > 0) {
+                  _coinsText = "У вас есть доступны бонусы 100 DOROG";
+                } else {
+                  _coinsText = "У вас еще нет бонусов 100 DOROG";
+                }
+
+                if (result == coins) {
+                } else {
+                  addStringValueToSharedPrefs("coins", result);
+                }
+              });
+            }
+          });
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -73,7 +116,7 @@ class _CoinsWidget extends State<CoinsWidget> {
                           Icon(Icons.money, size: 25),
                           SizedBox(width: 10),
                           Text(
-                            "0",
+                            _coinsCount.toString(),
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 25,
@@ -94,7 +137,7 @@ class _CoinsWidget extends State<CoinsWidget> {
                     Container(
                       margin: EdgeInsets.only(top: 10, bottom: 10),
                       child: Text(
-                        "У вас еще нет бонусов 100 DOROG",
+                        _coinsText.toString(),
                         style: TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.normal,

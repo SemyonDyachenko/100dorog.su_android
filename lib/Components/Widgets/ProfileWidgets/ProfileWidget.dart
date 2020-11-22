@@ -8,6 +8,7 @@ import 'CoinsWidget.dart';
 import 'ProfileSettings.dart';
 import 'UserDataWidget.dart';
 import 'ProfileSignup.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileWidget extends StatefulWidget {
   _ProfileWidget createState() => _ProfileWidget();
@@ -15,6 +16,33 @@ class ProfileWidget extends StatefulWidget {
 
 class _ProfileWidget extends State<ProfileWidget> {
   String _firstname, _lastname, _phone;
+  var _coinsCount = "0";
+
+  @override
+  void initState() {
+    super.initState();
+    getStringFromSharedPrefs("user_phone").then((phone) {
+      getCoins(phone).then((result) {
+        getStringFromSharedPrefs("coins").then((coins) {
+          if (coins == "" || coins == null) {
+            setState(() {
+              addStringValueToSharedPrefs("coins", result);
+              _coinsCount = result;
+            });
+          } else {
+            setState(() {
+              _coinsCount = result;
+
+              if (result == coins) {
+              } else {
+                addStringValueToSharedPrefs("coins", result);
+              }
+            });
+          }
+        });
+      });
+    });
+  }
 
   Widget _buildSettingsElement() {
     return FlatButton(
@@ -353,7 +381,7 @@ class _ProfileWidget extends State<ProfileWidget> {
             Expanded(
               flex: 1,
               child: Container(
-                margin: EdgeInsets.only(left: 100),
+                margin: EdgeInsets.only(left: 80),
                 child: Icon(
                   Icons.arrow_forward_ios,
                   size: 14,
@@ -455,7 +483,7 @@ class _ProfileWidget extends State<ProfileWidget> {
                                       ),
                                       SizedBox(width: 5),
                                       Text(
-                                        "0",
+                                        _coinsCount.toString(),
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
@@ -520,7 +548,7 @@ class _ProfileWidget extends State<ProfileWidget> {
                       children: <Widget>[
                         FlatButton(
                           color: Colors.blue,
-                          onPressed: () {},
+                          onPressed: () => launch("tel://+79180643382"),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4.0),
                               side: BorderSide(color: Colors.transparent)),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:splashscreen/splashscreen.dart';
 import 'Components/TabPages.dart';
 
 void main() {
@@ -15,7 +16,14 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: TabsPage(),
+      home: SplashScreen(
+          seconds: 5,
+          navigateAfterSeconds: new TabsPage(),
+          image: new Image.asset('assets/100.png'),
+          backgroundColor: Colors.white,
+          styleTextUnderTheLoader: new TextStyle(),
+          photoSize: 100.0,
+          loaderColor: Colors.transparent),
     );
   }
 }
