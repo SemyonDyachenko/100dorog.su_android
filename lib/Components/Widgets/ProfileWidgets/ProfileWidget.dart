@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:travel/Components/Widgets/ProfileWidgets/NotificationWidget.dart';
+import 'package:travel/Components/Widgets/ProfileWidgets/OrdersWidget.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/RegionSettings.dart';
 import 'package:travel/api/auth/auth_services.dart';
 import 'package:travel/api/auth/preferences.dart';
@@ -15,12 +16,15 @@ class ProfileWidget extends StatefulWidget {
 }
 
 class _ProfileWidget extends State<ProfileWidget> {
-  String _firstname, _lastname, _phone;
+  GlobalKey<RefreshIndicatorState> refreshKey;
+  String _firstname = "", _lastname = "", _phone = "";
   var _coinsCount = "0";
 
   @override
   void initState() {
     super.initState();
+    refreshKey = GlobalKey<RefreshIndicatorState>();
+
     getStringFromSharedPrefs("user_phone").then((phone) {
       getCoins(phone).then((result) {
         getStringFromSharedPrefs("coins").then((coins) {
@@ -39,6 +43,33 @@ class _ProfileWidget extends State<ProfileWidget> {
               }
             });
           }
+        });
+      });
+    });
+  }
+
+  Future<Null> refreshData() async {
+    await Future.delayed(Duration(seconds: 1));
+    getAllTours().then((value) {
+      getStringFromSharedPrefs("user_phone").then((phone) {
+        getCoins(phone).then((result) {
+          getStringFromSharedPrefs("coins").then((coins) {
+            if (coins == "" || coins == null) {
+              setState(() {
+                addStringValueToSharedPrefs("coins", result);
+                _coinsCount = result;
+              });
+            } else {
+              setState(() {
+                _coinsCount = result;
+
+                if (result == coins) {
+                } else {
+                  addStringValueToSharedPrefs("coins", result);
+                }
+              });
+            }
+          });
         });
       });
     });
@@ -286,6 +317,8 @@ class _ProfileWidget extends State<ProfileWidget> {
               FlatButton(
                 onPressed: () {
                   logoutUser();
+                  Navigator.pop(context);
+                  refreshData();
                 },
                 color: Color.fromARGB(200, 247, 72, 72),
                 child: Text("Да"),
@@ -394,6 +427,70 @@ class _ProfileWidget extends State<ProfileWidget> {
     );
   }
 
+  Widget buildFlatCard(BuildContext context, Widget widget, String title,
+      Icon icon, String subtitle) {
+    return Container(
+      margin: EdgeInsets.only(left: 3, right: 3),
+      child: FlatButton(
+        color: Colors.white,
+        minWidth: 150,
+        padding: EdgeInsets.all(0),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return widget;
+              },
+            ),
+          );
+        },
+        child: Container(
+          width: 150,
+          height: 100,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(2),
+            border: Border.all(color: Colors.grey[100], width: 1),
+          ),
+          margin: EdgeInsets.only(left: 0, right: 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(top: 20, left: 15),
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 20, left: 15),
+                child: Row(
+                  children: <Widget>[
+                    icon,
+                    SizedBox(width: 5),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
@@ -423,201 +520,150 @@ class _ProfileWidget extends State<ProfileWidget> {
               ),
             ]),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            buildPersonalInfoContainer(context),
-            SizedBox(height: 5),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                child: Row(
+      body: RefreshIndicator(
+        key: refreshKey,
+        onRefresh: () async {
+          await refreshData();
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              buildPersonalInfoContainer(context),
+              SizedBox(height: 5),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: Row(
+                    children: <Widget>[
+                      buildFlatCard(context, CoinsWidget(), "Бонусы",
+                          Icon(Icons.money), _coinsCount.toString() ?? ""),
+                      buildFlatCard(context, OrdersWidget(), "Заказы",
+                          Icon(Icons.shopping_bag_outlined), "1"),
+                      buildFlatCard(context, CoinsWidget(), "Избранное",
+                          Icon(Icons.favorite_outline), "2"),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              _buildRegionElement(),
+              _buildMoneyElement(),
+              _buildNotificationElement(),
+              _buildSettingsElement(),
+              SizedBox(height: 10),
+              Container(
+                padding: EdgeInsets.only(left: 20, right: 20, bottom: 5),
+                margin: EdgeInsets.only(left: 20, right: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(width: 0.5, color: Colors.grey[200]),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                width: m_ScreenSize.width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    for (var i in text)
-                      Container(
-                        margin: EdgeInsets.only(left: 3, right: 3),
-                        child: FlatButton(
-                          color: Colors.white,
-                          minWidth: 150,
-                          padding: EdgeInsets.all(0),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return CoinsWidget();
-                                },
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: 150,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2),
-                              border:
-                                  Border.all(color: Colors.grey[100], width: 1),
-                            ),
-                            margin: EdgeInsets.only(left: 0, right: 0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.only(top: 20, left: 15),
-                                  child: Text(
-                                    "Бонусы",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(top: 20, left: 15),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.money,
-                                      ),
-                                      SizedBox(width: 5),
-                                      Text(
-                                        _coinsCount.toString(),
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                    Container(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "Связаться с нами?",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 10),
+                      child: Text(
+                        "Найдите ответ на свой вопрос, наши контакты:",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 10),
+                      child: Row(
+                        children: <Widget>[
+                          FlatButton(
+                            color: Colors.blue,
+                            onPressed: () => launch("tel://+79180643382"),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4.0),
+                                side: BorderSide(color: Colors.transparent)),
+                            child: Text(
+                              "+7 918 064 33 82",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          FlatButton(
+                            color: Color.fromARGB(500, 59, 204, 122),
+                            onPressed: () =>
+                                launch("whatsapp://send?phone=89673067936"),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4.0),
+                                side: BorderSide(color: Colors.transparent)),
+                            child: Text(
+                              "WhatsApp",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            _buildRegionElement(),
-            _buildMoneyElement(),
-            _buildNotificationElement(),
-            _buildSettingsElement(),
-            SizedBox(height: 10),
-            Container(
-              padding: EdgeInsets.only(left: 20, right: 20, bottom: 5),
-              margin: EdgeInsets.only(left: 20, right: 20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(width: 0.5, color: Colors.grey[200]),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              width: m_ScreenSize.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Text(
-                      "Связаться с нами?",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+              SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.5, color: Colors.grey[200]),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                width: m_ScreenSize.width * .9,
+                child: FlatButton(
+                  minWidth: m_ScreenSize.width * .9,
+                  height: 60,
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.0),
+                      side: BorderSide(color: Colors.transparent)),
+                  onPressed: () {},
+                  child: Text(
+                    "Оцените наше приложение",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text(
-                      "Найдите ответ на свой вопрос, наши контакты:",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Row(
-                      children: <Widget>[
-                        FlatButton(
-                          color: Colors.blue,
-                          onPressed: () => launch("tel://+79180643382"),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                              side: BorderSide(color: Colors.transparent)),
-                          child: Text(
-                            "+7 918 064 33 82",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        FlatButton(
-                          color: Color.fromARGB(500, 59, 204, 122),
-                          onPressed: () {},
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                              side: BorderSide(color: Colors.transparent)),
-                          child: Text(
-                            "WhatsApp",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 10),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(width: 0.5, color: Colors.grey[200]),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              width: m_ScreenSize.width * .9,
-              child: FlatButton(
-                minWidth: m_ScreenSize.width * .9,
-                height: 60,
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6.0),
-                    side: BorderSide(color: Colors.transparent)),
-                onPressed: () {},
-                child: Text(
-                  "Оцените наше приложение",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            Container(
-              width: m_ScreenSize.width * .6,
-              child: FlatButton(
-                onPressed: () {},
-                child: Text(
-                  "Политика обработки данных и информации v 1.0.0",
-                  textAlign: TextAlign.center,
+              SizedBox(height: 20),
+              Container(
+                width: m_ScreenSize.width * .6,
+                child: FlatButton(
+                  onPressed: () {},
+                  child: Text(
+                    "Политика обработки данных и информации v 1.0.0",
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 10),
-          ],
+              SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     );

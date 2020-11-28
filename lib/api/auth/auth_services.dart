@@ -46,6 +46,7 @@ class Tour {
   final String bonus_count;
   final String bonus_canused;
   final String event_datetime;
+  final String location;
 
   Tour({
     this.id,
@@ -62,6 +63,7 @@ class Tour {
     this.bonus_count,
     this.bonus_canused,
     this.event_datetime,
+    this.location,
   });
 
   factory Tour.fromJson(Map<String, dynamic> json) {
@@ -79,7 +81,8 @@ class Tour {
       modified: json['modified'] as String,
       bonus_count: json['bonus_additem'] as String,
       bonus_canused: json['bonus_canused'] as String,
-      event_datetime: json['event_datetime'] as String,
+      event_datetime: json['event_date'] as String,
+      location: json['location'] as String,
     );
   }
 
@@ -98,7 +101,8 @@ class Tour {
       'modified': modified,
       'bonus_count': bonus_count,
       'bonus_canused': bonus_canused,
-      'event_datetime': event_datetime,
+      'event_date': event_datetime,
+      'location': location,
     };
   }
 }
@@ -108,29 +112,42 @@ getAllTours() async {
   var response = await http.post(url);
   var responseArray = jsonDecode(response.body);
 
-  List<Map<String, dynamic>> tours = [];
+  List<Map<String, dynamic>> tours = List<Map<String, dynamic>>();
 
-  for (var i = 0;
-      i < jsonDecode(responseArray['data'].toString()).length;
-      i++) {
-    Tour tour = Tour.fromJson(jsonDecode(responseArray['data'].toString())[i]);
-    tours.add(tour.toMap());
+  if (response.body != null) {
+    for (var i = 0;
+        i < jsonDecode(responseArray['data'].toString()).length;
+        i++) {
+      Tour tour =
+          Tour.fromJson(jsonDecode(responseArray['data'].toString())[i]);
+      tours.add(tour.toMap());
+    }
+
+    if (tours.isNotEmpty) {
+      return tours;
+    } else {
+      return null;
+    }
+  } else {
+    return null;
   }
-
-  return tours;
 }
 
 getTourById(int id) async {
   const url = "https://biquad.ru/dorogi/api/tour/get_tour.php";
-  var data = {"id": id};
+  var data = {"id": id.toString()};
   var response = await http.post(url, body: data);
   var responseArray = jsonDecode(response.body);
 
-  if (responseArray['result'] == "success") {
-    Tour tour = Tour.fromJson(jsonDecode(responseArray['data'].toString()));
-    return tour.toMap();
+  if (response.body != null) {
+    if (responseArray['result'] == "success") {
+      Tour tour = Tour.fromJson(jsonDecode(responseArray['data'].toString()));
+      return tour.toMap();
+    } else {
+      return "error";
+    }
   } else {
-    return "error";
+    return null;
   }
 }
 
@@ -179,9 +196,11 @@ getUserData(String phone) async {
   var response = await http.post(url, body: data);
   var responseArray = jsonDecode(response.body);
 
-  User user = User.fromJson(jsonDecode(responseArray['data'].toString()));
+  if (response.body != null) {
+    User user = User.fromJson(jsonDecode(responseArray['data'].toString()));
 
-  return user.toMap();
+    return user.toMap();
+  }
 }
 
 setContacts(
@@ -221,10 +240,14 @@ getCoins(String phone) async {
   var response = await http.post(url, body: data);
   var responseArray = jsonDecode(response.body);
 
-  if (responseArray['result'] == "success") {
-    return responseArray['count'];
+  if (response.body != null) {
+    if (responseArray['result'] == "success") {
+      return responseArray['count'];
+    } else {
+      return "error";
+    }
   } else {
-    return "error";
+    return null;
   }
 }
 

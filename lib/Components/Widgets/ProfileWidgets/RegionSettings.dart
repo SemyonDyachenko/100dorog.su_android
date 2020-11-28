@@ -1,10 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:travel/api/regions/regions_services.dart';
 
 class RegionSettings extends StatefulWidget {
   _RegionSettings createState() => _RegionSettings();
 }
 
 class _RegionSettings extends State<RegionSettings> {
+  GlobalKey<RefreshIndicatorState> refreshKey;
+  List<Map<String, dynamic>> _regions = List<Map<String, dynamic>>();
+
+  @override
+  void initState() {
+    super.initState();
+    refreshKey = GlobalKey<RefreshIndicatorState>();
+
+    getAllRegions().then((value) {
+      setState(() {
+        _regions = value;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  Future<Null> refreshData() async {
+    await Future.delayed(Duration(seconds: 1));
+    getAllRegions().then((value) {
+      setState(() {
+        _regions = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
@@ -26,76 +57,83 @@ class _RegionSettings extends State<RegionSettings> {
         title:
             Text("Регион", style: TextStyle(color: Colors.black, fontSize: 18)),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(left: 10, right: 10, top: 15),
-              alignment: Alignment.centerLeft,
-              height: 40.0,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(6.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white,
-                    blurRadius: 6.0,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.phone,
-                style: TextStyle(color: Colors.black),
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 6.0),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.black,
-                  ),
-                  hintText: "Введите название региона или города",
-                  hintStyle: TextStyle(color: Colors.black54),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            for (var i in text)
-              FlatButton(
-                padding: EdgeInsets.all(0),
-                onPressed: () {},
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      width: m_ScreenSize.width,
-                      margin: EdgeInsets.only(left: 15, right: 15, top: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text("Абинск",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 16,
-                              )),
-                          SizedBox(height: 3),
-                          Text("г. Абинск, Краснодарский край, Россия",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 13,
-                              )),
-                          SizedBox(height: 7),
-                          Container(
-                            width: m_ScreenSize.width,
-                            height: 1,
-                            color: Colors.grey[300],
-                          ),
-                        ],
-                      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await refreshData();
+        },
+        key: refreshKey,
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(left: 10, right: 10, top: 15),
+                alignment: Alignment.centerLeft,
+                height: 40.0,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(6.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.white,
+                      blurRadius: 6.0,
+                      offset: Offset(0, 2),
                     ),
                   ],
                 ),
+                child: TextFormField(
+                  keyboardType: TextInputType.phone,
+                  style: TextStyle(color: Colors.black),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.only(top: 6.0),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.black,
+                    ),
+                    hintText: "Введите название региона или города",
+                    hintStyle: TextStyle(color: Colors.black54),
+                  ),
+                ),
               ),
-          ],
+              SizedBox(height: 20),
+              for (var i = 0; i < _regions.length; i++)
+                FlatButton(
+                  padding: EdgeInsets.all(0),
+                  onPressed: () {},
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        width: m_ScreenSize.width,
+                        margin: EdgeInsets.only(left: 15, right: 15, top: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(_regions[i]['name'].toString(),
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 16,
+                                )),
+                            SizedBox(height: 3),
+                            Text("Краснодарский край, Россия",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 13,
+                                )),
+                            SizedBox(height: 7),
+                            Container(
+                              width: m_ScreenSize.width,
+                              height: 1,
+                              color: Colors.grey[300],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );

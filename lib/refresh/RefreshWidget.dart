@@ -8,6 +8,9 @@ class SwipeToRefreshExample extends StatefulWidget {
 }
 
 class _SwipeToRefreshState extends State<SwipeToRefreshExample> {
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold();

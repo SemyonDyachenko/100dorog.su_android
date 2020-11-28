@@ -20,27 +20,27 @@ class TabNavigationItem {
   static List<TabNavigationItem> get items => [
         TabNavigationItem(
           m_page: MainPage(),
-          m_icon: Icon(Icons.home),
+          m_icon: Icon(Icons.explore_outlined),
           m_title: 'Главная',
         ),
         TabNavigationItem(
           m_page: SearchPage(),
           m_icon: Icon(
-            Icons.search,
+            Icons.search_outlined,
           ),
           m_title: "Поиск",
         ),
         TabNavigationItem(
           m_page: MailPage(),
           m_icon: Icon(
-            Icons.notifications,
+            Icons.notifications_outlined,
           ),
           m_title: "Почта",
         ),
         TabNavigationItem(
           m_page: ProfilePage(),
           m_icon: Icon(
-            Icons.account_circle,
+            Icons.account_circle_outlined,
           ),
           m_title: "Профиль",
         ),
@@ -48,6 +48,10 @@ class TabNavigationItem {
 }
 
 class TabsPage extends StatefulWidget {
+  final int index;
+
+  const TabsPage({Key key, @required this.index}) : super(key: key);
+
   @override
   TabsPageState createState() => TabsPageState();
 }
@@ -69,10 +73,12 @@ class TabsPageState extends State<TabsPage> {
         type: BottomNavigationBarType.fixed,
         selectedFontSize: 15,
         unselectedFontSize: 13,
-        selectedLabelStyle: TextStyle(color: Colors.blue),
+        selectedItemColor: Color.fromARGB(500, 255, 45, 84),
+        unselectedLabelStyle: TextStyle(color: Colors.black),
+        selectedLabelStyle: TextStyle(color: Colors.black),
         selectedIconTheme:
-            IconThemeData(color: Color.fromARGB(200, 0, 140, 255), size: 30),
-        unselectedIconTheme: IconThemeData(color: Colors.black, size: 28),
+            IconThemeData(color: Color.fromARGB(500, 255, 45, 84), size: 26),
+        unselectedIconTheme: IconThemeData(color: Colors.black, size: 24),
         currentIndex: _currentIndex,
         onTap: (int index) => setState(() => _currentIndex = index),
         showUnselectedLabels: false,

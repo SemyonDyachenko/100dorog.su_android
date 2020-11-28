@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'Components/TabPages.dart';
 
@@ -18,7 +17,9 @@ class MyApp extends StatelessWidget {
       ),
       home: SplashScreen(
           seconds: 5,
-          navigateAfterSeconds: new TabsPage(),
+          navigateAfterSeconds: new TabsPage(
+            index: 0,
+          ),
           image: new Image.asset('assets/100.png'),
           backgroundColor: Colors.white,
           styleTextUnderTheLoader: new TextStyle(),
