@@ -37,7 +37,20 @@ class _YandexPayment extends State<YandexPayment> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Оплата"),
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        leading: Navigator.canPop(context)
+            ? IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.black,
+                  size: 22,
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            : null,
+        title: Text("Закройте после оплаты",
+            style: TextStyle(color: Colors.black, fontSize: 18)),
       ),
       body: WebView(
         initialUrl: initialUrl,

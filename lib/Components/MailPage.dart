@@ -67,10 +67,10 @@ class _MailPage extends State<MailPage> {
         backgroundColor: Colors.white,
       ),
       body: RefreshIndicator(
+        key: refreshKey,
         onRefresh: () async {
           await refreshData();
         },
-        key: refreshKey,
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[

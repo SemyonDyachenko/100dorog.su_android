@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travel/api/auth/preferences.dart';
 import 'package:travel/api/regions/regions_services.dart';
 
 class RegionSettings extends StatefulWidget {
@@ -96,10 +97,51 @@ class _RegionSettings extends State<RegionSettings> {
                 ),
               ),
               SizedBox(height: 20),
+              FlatButton(
+                padding: EdgeInsets.all(0),
+                onPressed: () {},
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      width: m_ScreenSize.width,
+                      margin: EdgeInsets.only(left: 15, right: 15, top: 5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text("Не выбрано",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 16,
+                              )),
+                          SizedBox(height: 3),
+                          Text(" ",
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 13,
+                              )),
+                          SizedBox(height: 7),
+                          Container(
+                            width: m_ScreenSize.width,
+                            height: 1,
+                            color: Colors.grey[300],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               for (var i = 0; i < _regions.length; i++)
                 FlatButton(
                   padding: EdgeInsets.all(0),
-                  onPressed: () {},
+                  onPressed: () {
+                    addStringValueToSharedPrefs("region", _regions[i]['name']);
+                    getStringFromSharedPrefs("region").then((value) {
+                      if (value != null) {
+                        Navigator.pop(context);
+                      } else {}
+                    });
+                  },
                   child: Column(
                     children: <Widget>[
                       Container(

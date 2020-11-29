@@ -3,6 +3,7 @@ import 'package:travel/Components/Widgets/OrderWidgets.dart/ConfirmOrder.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/ProfileLogin.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/ProfileSignup.dart';
 import 'package:travel/api/auth/preferences.dart';
+import 'package:travel/utils/CircularProgressBar.dart';
 import '../../api/auth/auth_services.dart';
 
 class TourWidget extends StatefulWidget {
@@ -530,8 +531,6 @@ class _TourWidget extends State<TourWidget> {
               ),
             ),
           )
-        : Scaffold(
-            body: Container(),
-          );
+        : circularProgressBar();
   }
 }

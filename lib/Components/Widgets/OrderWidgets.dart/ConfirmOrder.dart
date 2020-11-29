@@ -52,6 +52,7 @@ class _ConfirmOrder extends State<ConfirmOrder> {
         tourData = value;
         normalPrice = int.parse(tourData['price']);
         childPrice = int.parse(tourData['child_price']);
+        _endPrice();
       });
     });
 
@@ -59,11 +60,10 @@ class _ConfirmOrder extends State<ConfirmOrder> {
       getUserData(phone).then((value) {
         setState(() {
           _coinsCount = int.parse(value['coins']);
+          _endPrice();
         });
       });
     });
-
-    _endPrice();
   }
 
   Future<Null> refreshData() async {
@@ -584,7 +584,7 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                                                     builder: (context) {
                                               return YandexPayment(
                                                   tourName: tourData['name'],
-                                                  sum: 10);
+                                                  sum: endPrice);
                                             }));
                                           } else {
                                             print(value);

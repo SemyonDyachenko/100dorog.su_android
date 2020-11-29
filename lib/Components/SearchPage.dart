@@ -176,7 +176,7 @@ class _SearchPage extends State<SearchPage> {
                     mainAxisSpacing: 10,
                     childAspectRatio: 290 / 420,
                     children: <Widget>[
-                      for (var i in text)
+                      for (var i = 0; i < allTours.length; i++)
                         allTours.length > 0
                             ? tourCard(
                                 context,

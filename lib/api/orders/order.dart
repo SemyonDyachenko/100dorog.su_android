@@ -3,16 +3,16 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Order {
-  int orderId;
+  String orderId;
   String type;
   String tourName;
-  int tourId;
-  DateTime orderDateTime;
-  DateTime paymentDateTime;
+  String tourId;
+  String orderDateTime;
+  String paymentDateTime;
   String status;
-  bool isPayment;
-  int sum;
-  int userId;
+  String isPayment;
+  String sum;
+  String userId;
   String userEmail;
 
   Order(
@@ -30,16 +30,16 @@ class Order {
 
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
-      orderId: json['id'] as int,
+      orderId: json['id'] as String,
       type: json['type'] as String,
       tourName: json['tour_name'] as String,
-      tourId: json['tour_id'] as int,
-      orderDateTime: json['order_datetime'] as DateTime,
-      paymentDateTime: json['payment_datetime'] as DateTime,
+      tourId: json['tour_id'] as String,
+      orderDateTime: json['order_datetime'] as String,
+      paymentDateTime: json['payment_datetime'] as String,
       status: json['status'] as String,
-      isPayment: json['is_payment'] as bool,
-      sum: json['sum'] as int,
-      userId: json['user_id'] as int,
+      isPayment: json['is_payment'] as String,
+      sum: json['sum'] as String,
+      userId: json['user_id'] as String,
       userEmail: json['user_email'] as String,
     );
   }
@@ -97,6 +97,8 @@ createOrder(
     } else {
       return responseArray['result'];
     }
+  } else {
+    return "null";
   }
 }
 
@@ -119,7 +121,11 @@ getOrders(String userId) async {
             Order.fromJson(jsonDecode(responseArray['data'].toString())[i]);
         orders.add(region.toMap());
       }
-      return orders;
+      if (orders.isNotEmpty) {
+        return orders;
+      } else {
+        return null;
+      }
       // here adding to orders list
     } else if (responseArray['result'] == "error") {
       return "error";

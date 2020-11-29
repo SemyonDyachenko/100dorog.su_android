@@ -5,6 +5,7 @@ import 'package:travel/Components/Widgets/ProfileWidgets/OrdersWidget.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/RegionSettings.dart';
 import 'package:travel/api/auth/auth_services.dart';
 import 'package:travel/api/auth/preferences.dart';
+import 'package:travel/api/orders/order.dart';
 import 'CoinsWidget.dart';
 import 'ProfileSettings.dart';
 import 'UserDataWidget.dart';
@@ -19,11 +20,21 @@ class _ProfileWidget extends State<ProfileWidget> {
   GlobalKey<RefreshIndicatorState> refreshKey;
   String _firstname = "", _lastname = "", _phone = "";
   var _coinsCount = "0";
+  List<Map<String, dynamic>> orders = List<Map<String, dynamic>>();
+  var _ordersCount = "0";
 
   @override
   void initState() {
     super.initState();
     refreshKey = GlobalKey<RefreshIndicatorState>();
+
+    getStringFromSharedPrefs("user_id").then((id) {
+      getOrders(id).then((value) {
+        setState(() {
+          _ordersCount = value.length.toString();
+        });
+      });
+    });
 
     getStringFromSharedPrefs("user_phone").then((phone) {
       getCoins(phone).then((result) {
@@ -50,6 +61,15 @@ class _ProfileWidget extends State<ProfileWidget> {
 
   Future<Null> refreshData() async {
     await Future.delayed(Duration(seconds: 1));
+
+    getStringFromSharedPrefs("user_id").then((id) {
+      getOrders(id).then((value) {
+        setState(() {
+          _ordersCount = value.length.toString();
+        });
+      });
+    });
+
     getAllTours().then((value) {
       getStringFromSharedPrefs("user_phone").then((phone) {
         getCoins(phone).then((result) {
@@ -538,8 +558,12 @@ class _ProfileWidget extends State<ProfileWidget> {
                     children: <Widget>[
                       buildFlatCard(context, CoinsWidget(), "Бонусы",
                           Icon(Icons.money), _coinsCount.toString() ?? ""),
-                      buildFlatCard(context, OrdersWidget(), "Заказы",
-                          Icon(Icons.shopping_bag_outlined), "1"),
+                      buildFlatCard(
+                          context,
+                          OrdersWidget(),
+                          "Заказы",
+                          Icon(Icons.shopping_bag_outlined),
+                          _ordersCount.toString()),
                       buildFlatCard(context, CoinsWidget(), "Избранное",
                           Icon(Icons.favorite_outline), "2"),
                     ],
