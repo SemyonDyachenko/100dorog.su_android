@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:http/http.dart' as http;
+import 'package:travel/Components/Widgets/ProfileWidgets/FavoritesWidget.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/NotificationWidget.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/OrdersWidget.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/RegionSettings.dart';
 import 'package:travel/api/auth/auth_services.dart';
 import 'package:travel/api/auth/preferences.dart';
+import 'package:travel/api/favorites/favorites.dart';
 import 'package:travel/api/orders/order.dart';
 import 'CoinsWidget.dart';
 import 'ProfileSettings.dart';
@@ -22,21 +25,45 @@ class _ProfileWidget extends State<ProfileWidget> {
   var _coinsCount = "0";
   List<Map<String, dynamic>> orders = List<Map<String, dynamic>>();
   var _ordersCount = "0";
+  var _selectedRegion = "";
+  var _favoritesCount = "0";
 
   @override
   void initState() {
     super.initState();
     refreshKey = GlobalKey<RefreshIndicatorState>();
 
+    getStringFromSharedPrefs("region").then((value) {
+      if (value != null) {
+        _selectedRegion = value;
+      }
+    });
+
     getStringFromSharedPrefs("user_id").then((id) {
       getOrders(id).then((value) {
         setState(() {
-          _ordersCount = value.length.toString();
+          if (value != null && value.isNotEmpty) {
+            _ordersCount = value.length.toString();
+          } else {
+            _ordersCount = "0";
+          }
         });
+      });
+
+      getFavorites(id.toString()).then((value) {
+        if (value != null && value.isNotEmpty && value != "error") {
+          setState(() {
+            _favoritesCount = value.length.toString();
+          });
+        } else {
+          setState(() {
+            _favoritesCount = "0";
+          });
+        }
       });
     });
 
-    getStringFromSharedPrefs("user_phone").then((phone) {
+    getStringFromSharedPrefs("user_email").then((phone) {
       getCoins(phone).then((result) {
         getStringFromSharedPrefs("coins").then((coins) {
           if (coins == "" || coins == null) {
@@ -62,16 +89,38 @@ class _ProfileWidget extends State<ProfileWidget> {
   Future<Null> refreshData() async {
     await Future.delayed(Duration(seconds: 1));
 
+    getStringFromSharedPrefs("region").then((value) {
+      if (value != null) {
+        _selectedRegion = value;
+      }
+    });
+
     getStringFromSharedPrefs("user_id").then((id) {
       getOrders(id).then((value) {
         setState(() {
-          _ordersCount = value.length.toString();
+          if (value != null && value.isNotEmpty) {
+            _ordersCount = value.length.toString();
+          } else {
+            _ordersCount = "0";
+          }
         });
+      });
+
+      getFavorites(id.toString()).then((value) {
+        if (value != null && value.isNotEmpty && value != "error") {
+          setState(() {
+            _favoritesCount = value.length.toString();
+          });
+        } else {
+          setState(() {
+            _favoritesCount = "0";
+          });
+        }
       });
     });
 
     getAllTours().then((value) {
-      getStringFromSharedPrefs("user_phone").then((phone) {
+      getStringFromSharedPrefs("user_email").then((phone) {
         getCoins(phone).then((result) {
           getStringFromSharedPrefs("coins").then((coins) {
             if (coins == "" || coins == null) {
@@ -126,7 +175,7 @@ class _ProfileWidget extends State<ProfileWidget> {
                 left: 20,
               ),
               child: Text(
-                "Насройки профиля",
+                "Настройки профиля",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 16,
@@ -297,7 +346,9 @@ class _ProfileWidget extends State<ProfileWidget> {
                 right: 20,
               ),
               child: Text(
-                "Абинск",
+                _selectedRegion != ""
+                    ? _selectedRegion.toString()
+                    : "Не выбрано",
                 style: TextStyle(
                   color: Colors.blue,
                   fontSize: 16,
@@ -337,8 +388,8 @@ class _ProfileWidget extends State<ProfileWidget> {
               FlatButton(
                 onPressed: () {
                   logoutUser();
-                  Navigator.pop(context);
                   refreshData();
+                  Phoenix.rebirth(context);
                 },
                 color: Color.fromARGB(200, 247, 72, 72),
                 child: Text("Да"),
@@ -349,7 +400,7 @@ class _ProfileWidget extends State<ProfileWidget> {
   }
 
   Widget buildPersonalInfoContainer(BuildContext context) {
-    getStringFromSharedPrefs("user_phone").then((value) {
+    getStringFromSharedPrefs("user_email").then((value) {
       setState(() {
         _phone = value;
       });
@@ -394,7 +445,9 @@ class _ProfileWidget extends State<ProfileWidget> {
                 borderRadius: BorderRadius.circular(100),
               ),
               child: Text(
-                "SD",
+                (_firstname != "" && _lastname != "")
+                    ? _firstname[0] + _lastname[0]
+                    : "AA",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -409,8 +462,8 @@ class _ProfileWidget extends State<ProfileWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                      _firstname == null
-                          ? _phone
+                      _firstname == null || _firstname == ""
+                          ? _phone.toString()
                           : _firstname + " " + _lastname,
                       style: TextStyle(
                         color: Colors.black,
@@ -515,8 +568,6 @@ class _ProfileWidget extends State<ProfileWidget> {
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
 
-    List text = [1, 2, 3, 4, 5];
-
     return Scaffold(
       appBar: AppBar(
         bottomOpacity: 0.0,
@@ -564,8 +615,8 @@ class _ProfileWidget extends State<ProfileWidget> {
                           "Заказы",
                           Icon(Icons.shopping_bag_outlined),
                           _ordersCount.toString()),
-                      buildFlatCard(context, CoinsWidget(), "Избранное",
-                          Icon(Icons.favorite_outline), "2"),
+                      buildFlatCard(context, FavoritesWidget(), "Избранное",
+                          Icon(Icons.favorite_outline), _favoritesCount),
                     ],
                   ),
                 ),
@@ -573,7 +624,6 @@ class _ProfileWidget extends State<ProfileWidget> {
               SizedBox(height: 20),
               _buildRegionElement(),
               _buildMoneyElement(),
-              _buildNotificationElement(),
               _buildSettingsElement(),
               SizedBox(height: 10),
               Container(

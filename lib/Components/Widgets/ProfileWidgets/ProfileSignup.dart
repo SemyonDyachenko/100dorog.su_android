@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:http/http.dart' as http;
 import 'package:travel/api/auth/preferences.dart';
+import 'package:travel/api/orders/order.dart';
 import 'ProfileLogin.dart';
 import '../../../api/auth/auth_services.dart';
 
@@ -10,16 +12,114 @@ class ProfileSignup extends StatefulWidget {
 
 class _ProfileSignup extends State<ProfileSignup> {
   bool _rememberMe = true;
-  final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  GlobalKey<RefreshIndicatorState> refreshKey;
+  bool _signButtonDisabled = true;
 
-  Widget _buildPhoneTextField() {
+  String authErrorCode = " ";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    refreshKey = GlobalKey<RefreshIndicatorState>();
+
+    getStringFromSharedPrefs("user_email").then((value) {
+      if (value != null && value != "") {}
+    });
+  }
+
+  Future<Null> refreshData() async {
+    await Future.delayed(Duration(seconds: 1));
+
+    getStringFromSharedPrefs("user_id").then((id) {
+      getOrders(id).then((value) {
+        setState(() {});
+      });
+    });
+  }
+
+  bool isPasswordCompliant(String password, [int minLength = 8]) {
+    if (password == null || password.isEmpty) {
+      return false;
+    }
+
+    bool hasUppercase = password.contains(new RegExp(r'[A-Z]'));
+    bool hasDigits = password.contains(new RegExp(r'[0-9]'));
+    bool hasLowercase = password.contains(new RegExp(r'[a-z]'));
+    bool hasSpecialCharacters =
+        password.contains(new RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+    bool hasMinLength = password.length > minLength;
+
+    return hasDigits &
+        hasUppercase &
+        hasLowercase &
+        hasSpecialCharacters &
+        hasMinLength;
+  }
+
+  void inputVaidate() {
+    if (_emailController.text != "" &&
+        _passwordController.text != "" &&
+        _confirmPasswordController.text != "") {
+      if (_passwordController.text == _confirmPasswordController.text) {
+        if (_emailController.text.length > 6) {
+          if (isPasswordCompliant(_passwordController.text)) {
+            setState(() {
+              _signButtonDisabled = false;
+            });
+          } else {
+            setState(() {
+              _signButtonDisabled = true;
+            });
+          }
+        }
+      }
+    }
+  }
+
+  void changeErrorCode(String code) {
+    switch (code) {
+      case 'not_numbers':
+        setState(() {
+          authErrorCode = "Пароль должен содержать цифры";
+        });
+        break;
+      case 'short':
+        setState(() {
+          authErrorCode = "Пароль должен быть длинее 8 символов";
+        });
+        break;
+      case 'password':
+        setState(() {
+          authErrorCode = "Пароли не совпадают";
+        });
+        break;
+      case 'error':
+        setState(() {
+          authErrorCode = "Ошибка регистрации";
+        });
+        break;
+      case 'success':
+        setState(() {
+          authErrorCode = " ";
+        });
+        break;
+      case 'exists':
+        setState(() {
+          authErrorCode = "Пользователь с такими телефоном уже существует";
+        });
+    }
+  }
+
+  Widget _buildEmailTextField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          "Телефон",
+          "E-mail",
           style: TextStyle(color: Colors.black),
         ),
         SizedBox(height: 10.0),
@@ -37,21 +137,18 @@ class _ProfileSignup extends State<ProfileSignup> {
               ),
             ],
           ),
-          child: TextFormField(
-            controller: _phoneController,
-            validator: (text) {
-              _phoneValidator(text);
-            },
-            keyboardType: TextInputType.phone,
+          child: TextField(
+            controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
             style: TextStyle(color: Colors.black),
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
-                Icons.phone_outlined,
+                Icons.email_outlined,
                 color: Colors.black,
               ),
-              hintText: "Номер телефона",
+              hintText: "E-mail",
               hintStyle: TextStyle(color: Colors.black54),
             ),
           ),
@@ -83,11 +180,8 @@ class _ProfileSignup extends State<ProfileSignup> {
               ),
             ],
           ),
-          child: TextFormField(
+          child: TextField(
             controller: _passwordController,
-            validator: (text) {
-              _passwordValidator(text);
-            },
             obscureText: true,
             style: TextStyle(color: Colors.black),
             decoration: InputDecoration(
@@ -129,13 +223,9 @@ class _ProfileSignup extends State<ProfileSignup> {
               ),
             ],
           ),
-          child: TextFormField(
+          child: TextField(
+            controller: _confirmPasswordController,
             obscureText: true,
-            validator: (text) {
-              if (text != _passwordController.text) {
-                return "Пароли не совпадают";
-              }
-            },
             keyboardType: TextInputType.visiblePassword,
             style: TextStyle(color: Colors.black),
             decoration: InputDecoration(
@@ -155,38 +245,57 @@ class _ProfileSignup extends State<ProfileSignup> {
     );
   }
 
-  Widget _buildRememberMe() {
-    return Container(
-      child: Row(
-        children: <Widget>[
-          Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
-            child: Checkbox(
-              value: _rememberMe,
-              checkColor: Colors.black,
-              activeColor: Colors.white,
-              onChanged: (value) {
-                setState(() {
-                  _rememberMe = value;
-                });
-              },
-            ),
-          ),
-          Text("Запомнить меня"),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSignupButton() {
+  Widget _buildSignupButton(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20),
       width: double.infinity,
       child: RaisedButton(
+        disabledColor: Colors.grey[300],
         elevation: 5.0,
         onPressed: () {
-          registerUser(
-              _phoneController.text, _passwordController.text, _rememberMe);
+          if (_passwordController.text == _confirmPasswordController.text) {
+            if (_passwordController.text.length >= 8) {
+              if (_passwordController.text.contains(new RegExp(r'[0-9]'))) {
+                registerUser(_emailController.text, _passwordController.text,
+                        _rememberMe)
+                    .then((value) {
+                  if (value == "success") {
+                    loginUser(_emailController.text, _passwordController.text)
+                        .then((value) {
+                      if (value == "success") {
+                        addStringValueToSharedPrefs(
+                            "user_email", _emailController.text);
+                        getUserData(_emailController.text).then((value) {
+                          addStringValueToSharedPrefs("user_id", value['id']);
+                          if (value['phone'] != "") {
+                            addStringValueToSharedPrefs(
+                                "phone", value['phone']);
+                          }
+                          addStringValueToSharedPrefs(
+                              "firstname", value['firstname']);
+                          addStringValueToSharedPrefs(
+                              "lastname", value['lastname']);
+                          if (value['coins'] != "") {
+                            addStringValueToSharedPrefs(
+                                "coins", value['coins']);
+                          }
+                        });
+                        Phoenix.rebirth(context);
+                      }
+                    });
+                  } else if (value == "exists") {
+                    changeErrorCode("exists");
+                  }
+                });
+              } else {
+                changeErrorCode("not_numbers");
+              }
+            } else {
+              changeErrorCode("short");
+            }
+          } else {
+            changeErrorCode("password");
+          }
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -241,7 +350,7 @@ class _ProfileSignup extends State<ProfileSignup> {
 
   @override
   void dispose() {
-    _phoneController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -249,25 +358,15 @@ class _ProfileSignup extends State<ProfileSignup> {
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
 
-    bool _login = true;
-
-    getStringFromSharedPrefs('user_phone').then((value) {
-      if (value == null) {
-        setState(() {
-          _login = false;
-        });
-      } else {
-        setState(() {
-          _login = true;
-        });
-      }
-    });
-
-    if (_login) {
-      return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.only(top: 80, left: 40, right: 40),
-          child: SingleChildScrollView(
+    return Scaffold(
+      body: RefreshIndicator(
+        key: refreshKey,
+        onRefresh: () async {
+          await refreshData();
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 80, left: 40, right: 40),
             child: Column(
               children: <Widget>[
                 Container(
@@ -285,23 +384,30 @@ class _ProfileSignup extends State<ProfileSignup> {
                   ),
                 ),
                 SizedBox(height: 30),
-                _buildPhoneTextField(),
+                _buildEmailTextField(),
                 SizedBox(height: 20.0),
                 _buildPasswordTextField(),
                 SizedBox(height: 20.0),
                 _buildRePasswordTextField(),
-                _buildRememberMe(),
+                Container(
+                  margin: EdgeInsets.only(top: 5, bottom: 0),
+                  alignment: Alignment.center,
+                  width: m_ScreenSize.width,
+                  child: Text(
+                    "$authErrorCode",
+                    style: TextStyle(color: Colors.red),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
                 SizedBox(height: 10),
-                _buildSignupButton(),
+                _buildSignupButton(context),
                 _buildLoginButton(),
               ],
             ),
           ),
         ),
-      );
-    } else {
-      Navigator.pop(context);
-    }
+      ),
+    );
   }
 
   String _phoneValidator(String value) {

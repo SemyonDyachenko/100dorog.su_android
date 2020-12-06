@@ -56,7 +56,7 @@ class _ConfirmOrder extends State<ConfirmOrder> {
       });
     });
 
-    getStringFromSharedPrefs("user_phone").then((phone) {
+    getStringFromSharedPrefs("user_email").then((phone) {
       getUserData(phone).then((value) {
         setState(() {
           _coinsCount = int.parse(value['coins']);
@@ -69,7 +69,7 @@ class _ConfirmOrder extends State<ConfirmOrder> {
   Future<Null> refreshData() async {
     await Future.delayed(Duration(seconds: 1));
 
-    getStringFromSharedPrefs("user_phone").then((phone) {
+    getStringFromSharedPrefs("user_email").then((phone) {
       getUserData(phone).then((value) {
         setState(() {
           _coinsCount = int.parse(value['coins']);

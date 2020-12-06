@@ -9,18 +9,18 @@ class UserDataWidget extends StatefulWidget {
 }
 
 class _UserDataWidget extends State<UserDataWidget> {
-  String _firstname, _lastname, _email;
+  String _firstname, _lastname, _phone;
   TextEditingController _firstnameController;
   TextEditingController _lastnameController;
-  TextEditingController _emailController;
+  TextEditingController _phoneController;
   TextEditingController _datebornControler = new TextEditingController();
 
   @override
   void initState() {
-    getStringFromSharedPrefs("user_email").then((value) {
+    getStringFromSharedPrefs("phone").then((value) {
       setState(() {
-        _email = value;
-        _emailController = new TextEditingController(text: _email);
+        _phone = value;
+        _phoneController = new TextEditingController(text: _phone);
       });
     });
 
@@ -117,12 +117,12 @@ class _UserDataWidget extends State<UserDataWidget> {
     );
   }
 
-  Widget _buildEmailField() {
+  Widget _buildPhoneField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          "E-mail",
+          "Номер телефона",
           style: TextStyle(color: Colors.black),
         ),
         SizedBox(height: 10.0),
@@ -141,13 +141,13 @@ class _UserDataWidget extends State<UserDataWidget> {
             ],
           ),
           child: TextFormField(
-            controller: _emailController,
-            keyboardType: TextInputType.emailAddress,
+            controller: _phoneController,
+            keyboardType: TextInputType.phone,
             style: TextStyle(color: Colors.black),
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 0.0, left: 14.0),
-              hintText: "E-mail",
+              hintText: "Номер телефона",
               hintStyle: TextStyle(color: Colors.black54),
             ),
           ),
@@ -236,23 +236,26 @@ class _UserDataWidget extends State<UserDataWidget> {
               SizedBox(height: 20),
               _buildLastNameField(),
               SizedBox(height: 20),
-              _buildEmailField(),
+              _buildPhoneField(),
               Container(
                 padding: EdgeInsets.symmetric(vertical: 25),
                 width: double.infinity,
                 child: RaisedButton(
                   elevation: 5.0,
                   onPressed: () {
-                    getStringFromSharedPrefs("user_phone").then((phone) {
-                      setContacts(phone, _firstnameController.text,
-                              _lastnameController.text, _emailController.text)
+                    getStringFromSharedPrefs("user_email").then((email) {
+                      setContacts(
+                              _phoneController.text,
+                              _firstnameController.text,
+                              _lastnameController.text,
+                              email)
                           .then((value) {
                         addStringValueToSharedPrefs(
                             "firstname", _firstnameController.text);
                         addStringValueToSharedPrefs(
                             "lastname", _lastnameController.text);
                         addStringValueToSharedPrefs(
-                            "user_email", _emailController.text);
+                            "phone", _phoneController.text);
                         Navigator.pop(context);
                       });
                     });

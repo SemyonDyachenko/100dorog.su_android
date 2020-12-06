@@ -18,6 +18,7 @@ class _SearchPage extends State<SearchPage> {
   Widget tourCard(BuildContext context, int product_id, String name,
       String date, String url_path, String price, String location) {
     var m_ScreenSize = MediaQuery.of(context).size;
+
     return Container(
       child: FlatButton(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -33,8 +34,7 @@ class _SearchPage extends State<SearchPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              width: 200,
-              height: 180,
+              height: m_ScreenSize.height / 3.2,
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(6),
@@ -46,7 +46,6 @@ class _SearchPage extends State<SearchPage> {
             ),
             Container(
               margin: EdgeInsets.only(top: 15, bottom: 0, left: 0),
-              width: 200,
               child: Text(
                 name,
                 style: TextStyle(
@@ -107,6 +106,8 @@ class _SearchPage extends State<SearchPage> {
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
     DateTime _dateTime;
+    var width = m_ScreenSize.width;
+    var height = m_ScreenSize.height;
 
     return Scaffold(
       body: RefreshIndicator(
@@ -174,7 +175,7 @@ class _SearchPage extends State<SearchPage> {
                     crossAxisCount: 2,
                     crossAxisSpacing: 15,
                     mainAxisSpacing: 10,
-                    childAspectRatio: 290 / 420,
+                    childAspectRatio: width / height,
                     children: <Widget>[
                       for (var i = 0; i < allTours.length; i++)
                         allTours.length > 0

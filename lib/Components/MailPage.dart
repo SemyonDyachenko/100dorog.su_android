@@ -21,7 +21,7 @@ class _MailPage extends State<MailPage> {
     super.initState();
     refreshKey = GlobalKey<RefreshIndicatorState>();
 
-    getStringFromSharedPrefs("user_phone").then((value) {
+    getStringFromSharedPrefs("user_email").then((value) {
       if (value == null) {
         setState(() {
           _firstline = "Создайте аккаунт";
@@ -41,7 +41,7 @@ class _MailPage extends State<MailPage> {
 
   Future<Null> refreshData() async {
     await Future.delayed(Duration(seconds: 1));
-    getStringFromSharedPrefs("user_phone").then((value) {
+    getStringFromSharedPrefs("user_email").then((value) {
       if (value == null) {
         setState(() {
           _firstline = "Создайте аккаунт";

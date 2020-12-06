@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travel/api/auth/preferences.dart';
 import 'package:travel/api/regions/regions_services.dart';
+import 'package:travel/utils/CircularProgressBar.dart';
 
 class RegionSettings extends StatefulWidget {
   _RegionSettings createState() => _RegionSettings();
@@ -9,11 +10,20 @@ class RegionSettings extends StatefulWidget {
 class _RegionSettings extends State<RegionSettings> {
   GlobalKey<RefreshIndicatorState> refreshKey;
   List<Map<String, dynamic>> _regions = List<Map<String, dynamic>>();
+  var _selectedRegion = "";
 
   @override
   void initState() {
     super.initState();
     refreshKey = GlobalKey<RefreshIndicatorState>();
+
+    getStringFromSharedPrefs("region").then((value) {
+      setState(() {
+        if (value != null) {
+          _selectedRegion = value;
+        }
+      });
+    });
 
     getAllRegions().then((value) {
       setState(() {
@@ -30,6 +40,13 @@ class _RegionSettings extends State<RegionSettings> {
 
   Future<Null> refreshData() async {
     await Future.delayed(Duration(seconds: 1));
+    getStringFromSharedPrefs("region").then((value) {
+      setState(() {
+        if (value != null) {
+          _selectedRegion = value;
+        }
+      });
+    });
     getAllRegions().then((value) {
       setState(() {
         _regions = value;
@@ -40,7 +57,7 @@ class _RegionSettings extends State<RegionSettings> {
   @override
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
-    List text = [1, 2, 3, 4, 5, 6];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -150,11 +167,17 @@ class _RegionSettings extends State<RegionSettings> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(_regions[i]['name'].toString(),
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 16,
-                                )),
+                            _selectedRegion == _regions[i]['name']
+                                ? Text(_regions[i]['name'].toString(),
+                                    style: TextStyle(
+                                      color: Colors.green[300],
+                                      fontSize: 16,
+                                    ))
+                                : Text(_regions[i]['name'].toString(),
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      fontSize: 16,
+                                    )),
                             SizedBox(height: 3),
                             Text("Краснодарский край, Россия",
                                 style: TextStyle(

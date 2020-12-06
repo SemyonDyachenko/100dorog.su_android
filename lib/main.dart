@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'Components/TabPages.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    Phoenix(child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {

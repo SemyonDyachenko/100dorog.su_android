@@ -136,3 +136,20 @@ getOrders(String userId) async {
     }
   }
 }
+
+deleteOrder(String order_id) async {
+  const url = "https://biquad.ru/dorogi/api/order/delete.php";
+
+  var data = {"id": order_id};
+
+  var response = await http.post(url, body: data);
+  var responseArray = jsonDecode(response.body);
+
+  if (response.body != null) {
+    if (responseArray['result'] == "success") {
+      return "success";
+    } else {
+      return "error";
+    }
+  }
+}

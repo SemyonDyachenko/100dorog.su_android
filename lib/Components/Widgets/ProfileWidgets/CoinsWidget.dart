@@ -17,7 +17,7 @@ class _CoinsWidget extends State<CoinsWidget> {
   void initState() {
     super.initState();
     refreshKey = GlobalKey<RefreshIndicatorState>();
-    getStringFromSharedPrefs("user_phone").then((phone) {
+    getStringFromSharedPrefs("user_email").then((phone) {
       if (phone != null) {
         getCoins(phone).then((result) {
           getStringFromSharedPrefs("coins").then((coins) {
@@ -54,7 +54,7 @@ class _CoinsWidget extends State<CoinsWidget> {
 
   Future<Null> refreshData() async {
     await Future.delayed(Duration(seconds: 1));
-    getStringFromSharedPrefs("user_phone").then((phone) {
+    getStringFromSharedPrefs("user_email").then((phone) {
       if (phone != null) {
         getCoins(phone).then((result) {
           getStringFromSharedPrefs("coins").then((coins) {

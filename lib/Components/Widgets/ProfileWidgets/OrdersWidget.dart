@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:travel/api/auth/preferences.dart';
 import 'package:travel/api/orders/order.dart';
 import 'package:travel/utils/CircularProgressBar.dart';
+import 'package:travel/utils/DatetimeUtils.dart';
 import 'AboutCoinsWidget.dart';
 import '../../../api/auth/auth_services.dart';
 
@@ -23,15 +24,19 @@ class _OrdersWidget extends State<OrdersWidget> {
     getStringFromSharedPrefs("user_id").then((id) {
       getOrders(id).then((value) {
         setState(() {
-          orders = value;
+          if (value != null) {
+            orders = value;
+          } else {}
         });
       });
     });
 
     getAllTours().then((value) {
-      setState(() {
-        allTours = value;
-      });
+      if (value != "" && value != null) {
+        setState(() {
+          allTours = value;
+        });
+      } else {}
     });
   }
 
@@ -41,15 +46,23 @@ class _OrdersWidget extends State<OrdersWidget> {
     getStringFromSharedPrefs("user_id").then((id) {
       getOrders(id).then((value) {
         setState(() {
-          orders = value;
+          if (value != null) {
+            orders = value;
+          } else {
+            setState(() {});
+          }
         });
       });
     });
 
     getAllTours().then((value) {
-      setState(() {
-        allTours = value;
-      });
+      if (value != "" && value != null) {
+        setState(() {
+          allTours = value;
+        });
+      } else {
+        setState(() {});
+      }
     });
   }
 
@@ -88,7 +101,13 @@ class _OrdersWidget extends State<OrdersWidget> {
                 Container(
                   margin: EdgeInsets.only(top: 5, left: 15),
                   child: Text(
-                    "Заказ от 4 ноября",
+                    "Заказ от " +
+                        DateTime.parse(order_date).day.toString() +
+                        " " +
+                        monthKeyToString(
+                                DateTime.parse(order_date).month.toString(),
+                                true)
+                            .toLowerCase(),
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -100,7 +119,19 @@ class _OrdersWidget extends State<OrdersWidget> {
                   child: FlatButton(
                     minWidth: 50,
                     padding: EdgeInsets.all(0),
-                    onPressed: () {},
+                    onPressed: () async {
+                      deleteOrder(order_id).then((value) async {
+                        if (value == "success") {
+                          if (orders.length == 1) {
+                            orders.clear();
+                          }
+                          await refreshData();
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text("Заказ успешно удален"),
+                          ));
+                        }
+                      });
+                    },
                     child: Icon(
                       Icons.close,
                       size: 16,
@@ -151,7 +182,7 @@ class _OrdersWidget extends State<OrdersWidget> {
                     borderRadius: BorderRadius.circular(3),
                   ),
                   child: Text(
-                    "Ожидает оплаты",
+                    status == "wait" ? "Ожидает оплаты" : "Подтверждение",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 12,
@@ -185,7 +216,7 @@ class _OrdersWidget extends State<OrdersWidget> {
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
 
-    return orders.isNotEmpty && allTours.isNotEmpty
+    return allTours.isNotEmpty
         ? Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
@@ -208,22 +239,27 @@ class _OrdersWidget extends State<OrdersWidget> {
               onRefresh: () async {
                 await refreshData();
               },
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    for (var i = orders.length - 1; i >= 0; i--)
-                      orderCard(
-                          context,
-                          orders[i]['orderId'],
-                          orders[i]['tourName'].toString(),
-                          orders[i]['tourId'],
-                          orders[i]['orderDateTime'].toString(),
-                          orders[i]['status'].toString(),
-                          allTours[int.parse(orders[i]['tourId'])]['url_path'],
-                          orders[i]['sum'].toString()),
-                    SizedBox(height: 20),
-                  ],
+              child: Builder(
+                builder: (context) => SingleChildScrollView(
+                  child: orders.isNotEmpty
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            for (var i = 0; i < orders.length; i++)
+                              orderCard(
+                                  context,
+                                  orders[i]['orderId'],
+                                  orders[i]['tourName'].toString(),
+                                  orders[i]['tourId'],
+                                  orders[i]['orderDateTime'].toString(),
+                                  orders[i]['status'].toString(),
+                                  allTours[int.parse(orders[i]['tourId'])]
+                                      ['url_path'],
+                                  orders[i]['sum'].toString()),
+                            SizedBox(height: 20),
+                          ],
+                        )
+                      : Column(children: <Widget>[]),
                 ),
               ),
             ),

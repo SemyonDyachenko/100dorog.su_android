@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travel/Components/SearchPage.dart';
+import 'package:travel/api/auth/preferences.dart';
 import 'package:travel/utils/CircularProgressBar.dart';
 import '../api/auth/auth_services.dart';
 import 'Widgets/TourWidget.dart';
@@ -17,10 +18,18 @@ class _MainPage extends State<MainPage> {
   ScrollController _scrollController = new ScrollController();
   List<Map<String, dynamic>> allTours = List<Map<String, dynamic>>();
   List needCount = [0, 1, 2];
+  var _selectedRegion = "";
 
   @override
   void initState() {
     super.initState();
+
+    getStringFromSharedPrefs("region").then((value) {
+      if (value != null) {
+        _selectedRegion = value;
+      }
+    });
+
     getAllTours().then((value) {
       setState(() {
         allTours = value;
@@ -31,12 +40,30 @@ class _MainPage extends State<MainPage> {
   }
 
   Future<Null> refreshData() async {
+    getStringFromSharedPrefs("region").then((value) {
+      if (value != null) {
+        _selectedRegion = value;
+      }
+    });
+
     await Future.delayed(Duration(seconds: 1));
     getAllTours().then((value) {
       setState(() {
         allTours = value;
       });
     });
+  }
+
+  String regionGenerate(regionText) {
+    if (regionText == "Анапа") {
+      return "Анапе";
+    } else if (regionText == "Туапсе") {
+      return regionText;
+    } else if (regionText == "Сочи") {
+      return "Сочи";
+    } else {
+      return regionText + "е";
+    }
   }
 
   @override
@@ -229,7 +256,11 @@ class _MainPage extends State<MainPage> {
                                   ),
                                   SizedBox(width: 10),
                                   Container(
-                                    child: Text("Вы сейчас в Абинске",
+                                    child: Text(
+                                        _selectedRegion != ""
+                                            ? "Вы сейчас в " +
+                                                regionGenerate(_selectedRegion)
+                                            : "Вы сейчас в Новороссийске",
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 14,
@@ -338,6 +369,7 @@ class _MainPage extends State<MainPage> {
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   Container(
                                     child: Text(
@@ -350,12 +382,28 @@ class _MainPage extends State<MainPage> {
                                     ),
                                   ),
                                   Container(
-                                    child: Text(
-                                      "Смотреть все",
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.normal,
-                                        color: Colors.grey,
+                                    height: 15,
+                                    padding: EdgeInsets.all(0),
+                                    child: FlatButton(
+                                      padding: EdgeInsets.all(0),
+                                      highlightColor: Colors.transparent,
+                                      splashColor: Colors.transparent,
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      onPressed: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return SearchPage();
+                                        }));
+                                      },
+                                      child: Text(
+                                        "Смотреть все",
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -490,12 +538,22 @@ class _MainPage extends State<MainPage> {
                                     ),
                                   ),
                                   Container(
-                                    child: Text(
-                                      "Смотреть все",
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.normal,
-                                        color: Colors.grey,
+                                    height: 15,
+                                    padding: EdgeInsets.all(0),
+                                    child: FlatButton(
+                                      padding: EdgeInsets.all(0),
+                                      highlightColor: Colors.transparent,
+                                      splashColor: Colors.transparent,
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      onPressed: () {},
+                                      child: Text(
+                                        "Смотреть все",
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
                                   ),

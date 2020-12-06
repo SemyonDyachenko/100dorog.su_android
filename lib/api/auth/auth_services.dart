@@ -3,28 +3,23 @@ import 'package:flutter_session/flutter_session.dart';
 import 'package:http/http.dart' as http;
 import 'package:travel/api/auth/preferences.dart';
 
-Future registerUser(String phone, String password, bool remember) async {
+Future registerUser(String email, String password, bool remember) async {
   const url = "https://www.biquad.ru/dorogi/api/user/add.php";
-  var data = {"phone": phone, "password": password};
+  var data = {"email": email, "password": password};
   var response = await http.post(url, body: data);
 
   if (jsonDecode(response.body)["result"] == "exists") {
     return "exists";
+  } else if (jsonDecode(response.body)["result"] == "success") {
+    return "success";
   } else {
-    if (jsonDecode(response.body)["result"] == "success") {
-      if (remember) {
-      } else {
-        return "success";
-      }
-    } else {
-      return "error";
-    }
+    return "error";
   }
 }
 
-Future<String> loginUser(String phone, String password) async {
+Future<String> loginUser(String email, String password) async {
   const url = "https://www.biquad.ru/dorogi/api/user/auth.php";
-  var data = {"phone": phone, "password": password};
+  var data = {"email": email, "password": password};
   var response = await http.post(url, body: data);
   var responseCode = await jsonDecode(response.body)["result"];
 
@@ -190,9 +185,9 @@ class User {
   }
 }
 
-getUserData(String phone) async {
+getUserData(String email) async {
   const url = "https://www.biquad.ru/dorogi/api/user/data.php";
-  var data = {"phone": phone};
+  var data = {"email": email};
   var response = await http.post(url, body: data);
   var responseArray = jsonDecode(response.body);
 
@@ -223,9 +218,9 @@ void logoutUser() {
   clearSharedPrefs();
 }
 
-addCoins(String token, String phone, String count) async {
+addCoins(String token, String email, String count) async {
   const url = "https://www.biquad.ru/dorogi/api/user/add_coins.php";
-  var data = {"token": token, "phone": phone, "count": count};
+  var data = {"token": token, "email": email, "count": count};
 
   var response = await http.post(url, body: data);
   var responseArray = jsonDecode(response.body)['result'];
@@ -233,9 +228,9 @@ addCoins(String token, String phone, String count) async {
   return responseArray;
 }
 
-getCoins(String phone) async {
+getCoins(String email) async {
   const url = "https://www.biquad.ru/dorogi/api/user/get_coins.php";
-  var data = {"phone": phone};
+  var data = {"email": email};
 
   var response = await http.post(url, body: data);
   var responseArray = jsonDecode(response.body);

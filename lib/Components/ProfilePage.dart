@@ -16,10 +16,20 @@ class _ProfilePage extends State<ProfilePage> {
   var _register;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    getStringFromSharedPrefs("user_email").then((value) {
+      _register = value;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
 
-    getStringFromSharedPrefs("user_phone").then((value) {
+    getStringFromSharedPrefs("user_email").then((value) {
       _register = value;
     });
 

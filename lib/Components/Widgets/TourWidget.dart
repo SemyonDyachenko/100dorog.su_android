@@ -3,6 +3,7 @@ import 'package:travel/Components/Widgets/OrderWidgets.dart/ConfirmOrder.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/ProfileLogin.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/ProfileSignup.dart';
 import 'package:travel/api/auth/preferences.dart';
+import 'package:travel/api/favorites/favorites.dart';
 import 'package:travel/utils/CircularProgressBar.dart';
 import '../../api/auth/auth_services.dart';
 
@@ -19,11 +20,28 @@ class _TourWidget extends State<TourWidget> {
   var _register;
   Map<String, dynamic> tourData = Map<String, dynamic>();
   GlobalKey<RefreshIndicatorState> refreshKey;
+  bool _isFavorite;
 
   @override
   void initState() {
     super.initState();
     refreshKey = GlobalKey<RefreshIndicatorState>();
+
+    getStringFromSharedPrefs("user_id").then((id) {
+      isFavorite(id.toString(), widget.id.toString()).then((value) {
+        if (value != "error") {
+          if (value == "true") {
+            setState(() {
+              _isFavorite = true;
+            });
+          } else if (value == "false") {
+            setState(() {
+              _isFavorite = false;
+            });
+          }
+        }
+      });
+    });
 
     getTourById(widget.id).then((value) {
       setState(() {
@@ -34,6 +52,23 @@ class _TourWidget extends State<TourWidget> {
 
   Future<Null> refreshData() async {
     await Future.delayed(Duration(seconds: 1));
+
+    getStringFromSharedPrefs("user_id").then((id) {
+      isFavorite(id.toString(), widget.id.toString()).then((value) {
+        if (value != "error") {
+          if (value == "true") {
+            setState(() {
+              _isFavorite = true;
+            });
+          } else if (value == "false") {
+            setState(() {
+              _isFavorite = false;
+            });
+          }
+        }
+      });
+    });
+
     getTourById(widget.id).then((value) {
       setState(() {
         tourData = value;
@@ -192,13 +227,13 @@ class _TourWidget extends State<TourWidget> {
 
   @override
   Widget build(BuildContext context) {
-    getStringFromSharedPrefs("user_phone").then((value) {
+    getStringFromSharedPrefs("user_email").then((value) {
       _register = value;
     });
 
     var m_ScreenSize = MediaQuery.of(context).size;
 
-    return tourData.isNotEmpty
+    return tourData.isNotEmpty && _isFavorite != null
         ? Scaffold(
             extendBodyBehindAppBar: true,
             appBar: AppBar(
@@ -207,39 +242,32 @@ class _TourWidget extends State<TourWidget> {
               elevation: 0.0,
               backgroundColor: Colors.transparent,
               title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Align(
+                  Container(
                     alignment: Alignment.topLeft,
-                    child: Container(
-                      alignment: Alignment.topLeft,
-                      child: FlatButton(
-                        minWidth: 25,
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(Icons.arrow_back,
-                            color: Colors.white, size: 25),
-                      ),
+                    child: FlatButton(
+                      minWidth: 25,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child:
+                          Icon(Icons.arrow_back, color: Colors.white, size: 25),
                     ),
                   ),
-                  Align(
+                  Container(
                     alignment: Alignment.topCenter,
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      margin: EdgeInsets.only(left: 15, right: 15),
-                      child: Text(
-                        "Подробнее о выбранном туре",
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                        textAlign: TextAlign.center,
+                    margin: EdgeInsets.only(left: 15, right: 15),
+                    child: Text(
+                      "Подробнее о выбранном туре",
+                      style: TextStyle(
+                        fontSize: 15,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.topRight,
+                  Container(
                     child: FlatButton(
                       minWidth: 25,
                       onPressed: () {},
@@ -254,279 +282,319 @@ class _TourWidget extends State<TourWidget> {
               onRefresh: () async {
                 await refreshData();
               },
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      width: m_ScreenSize.width,
-                      height: m_ScreenSize.height * .35,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(tourData['url_path']),
-                          fit: BoxFit.cover,
+              child: Builder(
+                builder: (context) => SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        width: m_ScreenSize.width,
+                        height: m_ScreenSize.height * .35,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(tourData['url_path']),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    Stack(
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            Container(
-                              alignment: Alignment.topLeft,
-                              margin: EdgeInsets.only(left: 20),
-                              child: Text(
-                                tourData['name'],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              margin: EdgeInsets.only(left: 20, top: 5),
-                              child: Text(
-                                tourData['event_date'].toString(),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Stack(
+                      SizedBox(height: 20),
+                      Stack(
                         children: <Widget>[
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.only(left: 20),
-                                  child: Text(
-                                    "Цена",
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.grey,
-                                    ),
-                                    textAlign: TextAlign.left,
+                          Column(
+                            children: <Widget>[
+                              Container(
+                                alignment: Alignment.topLeft,
+                                margin: EdgeInsets.only(left: 20),
+                                child: Text(
+                                  tourData['name'],
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                Container(
-                                  margin: EdgeInsets.only(left: 20, top: 5),
-                                  child: Text(
-                                    tourData['price'] +
-                                        " / " +
-                                        tourData['child_price'],
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                    textAlign: TextAlign.left,
+                              ),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                margin: EdgeInsets.only(left: 20, top: 5),
+                                child: Text(
+                                  tourData['event_date'].toString(),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.grey,
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.only(left: 60),
-                                  child: Text(
-                                    "Возраст",
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.grey,
-                                    ),
-                                    textAlign: TextAlign.left,
-                                  ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(left: 60, top: 5),
-                                  child: Text(
-                                    "Взрослый / Ребенок",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Stack(
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.only(right: 0, top: 0),
-                                  child: FlatButton(
-                                      splashColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onPressed: () {},
-                                      child: Icon(
-                                          Icons.favorite_outline_rounded,
-                                          color: Colors.black)),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      width: m_ScreenSize.width * .90,
-                      height: 2,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                    ),
-                    Container(
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 10,
-                              horizontal: 20,
-                            ),
-                            alignment: Alignment.topLeft,
-                            child: Text("Описание",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                          Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal: 20,
-                              ),
-                              child: Text(
-                                tourData['description'],
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 13,
-                                ),
-                                textAlign: TextAlign.left,
-                              )),
-                          Container(
-                            width: m_ScreenSize.width * .90,
-                            height: 2,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 10,
-                              horizontal: 20,
-                            ),
-                            alignment: Alignment.topLeft,
-                            child: Text("Дополнительно",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                          Container(
+                      SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Stack(
+                          children: <Widget>[
+                            Align(
                               alignment: Alignment.topLeft,
-                              padding: EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal: 20,
-                              ),
                               child: Column(
-                                children: [
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
                                   Container(
-                                    alignment: Alignment.topLeft,
-                                    margin: EdgeInsets.only(top: 0),
+                                    margin: EdgeInsets.only(left: 20),
                                     child: Text(
-                                      "- Ливадийский дворец – 400 взр 250 льгот 100 дет",
+                                      "Цена",
                                       style: TextStyle(
-                                        color: Colors.grey,
                                         fontSize: 13,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.grey,
                                       ),
                                       textAlign: TextAlign.left,
                                     ),
                                   ),
                                   Container(
-                                    alignment: Alignment.topLeft,
-                                    margin: EdgeInsets.only(top: 5),
+                                    margin: EdgeInsets.only(left: 20, top: 5),
                                     child: Text(
-                                      "- Дворец Дюльбер – 350 руб/ чел",
+                                      tourData['price'] +
+                                          " / " +
+                                          tourData['child_price'],
                                       style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 13,
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    margin: EdgeInsets.only(top: 5),
-                                    child: Text(
-                                      "- Массандровский дворец – 350 взр 250 льгот 150 дет",
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 13,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
                                       ),
                                       textAlign: TextAlign.left,
                                     ),
                                   ),
                                 ],
-                              )),
-                          Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.only(top: 20, bottom: 10),
-                            child: FlatButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6.0),
-                                  side: BorderSide(color: Colors.transparent)),
-                              minWidth: m_ScreenSize.width * .95,
-                              height: 60,
-                              color: Color.fromARGB(500, 0, 140, 255),
-                              onPressed: () {
-                                if (_register != null) {
-                                  // if sign un
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return ConfirmOrder(id: widget.id);
-                                  }));
-                                } else {
-                                  // if not sign in
-                                  showLoginNavigator(context);
-                                }
-                              },
-                              child: Text("Забронировать",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                  )),
+                              ),
                             ),
-                          ),
-                        ],
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    margin: EdgeInsets.only(left: 60),
+                                    child: Text(
+                                      "Возраст",
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.grey,
+                                      ),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 60, top: 5),
+                                    child: Text(
+                                      "Взрослый / Ребенок",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Stack(
+                                children: <Widget>[
+                                  Container(
+                                    margin: EdgeInsets.only(right: 0, top: 0),
+                                    child: FlatButton(
+                                        splashColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        onPressed: () {
+                                          getStringFromSharedPrefs("user_id")
+                                              .then((id) {
+                                            if (_isFavorite) {
+                                              removeFavorite(id.toString(),
+                                                      widget.id.toString())
+                                                  .then((value) {
+                                                if (value != "error") {
+                                                  setState(() {
+                                                    _isFavorite = false;
+                                                  });
+                                                  Scaffold.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        "Тур удален из списка Избранное"),
+                                                  ));
+                                                }
+                                              });
+                                            } else {
+                                              addFavorite(id.toString(),
+                                                      widget.id.toString())
+                                                  .then((value) {
+                                                if (value != "error") {
+                                                  setState(() {
+                                                    _isFavorite = true;
+                                                  });
+                                                  Scaffold.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        "Тур добавлен в список Избранное"),
+                                                  ));
+                                                }
+                                              });
+                                            }
+                                          });
+                                        },
+                                        child: Icon(
+                                            Icons.favorite_outline_rounded,
+                                            color: _isFavorite
+                                                ? Colors.red[300]
+                                                : Colors.black)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 10),
+                      Container(
+                        width: m_ScreenSize.width * .90,
+                        height: 2,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                      ),
+                      Container(
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 20,
+                              ),
+                              alignment: Alignment.topLeft,
+                              child: Text("Описание",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 5,
+                                  horizontal: 20,
+                                ),
+                                child: Text(
+                                  tourData['description'],
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13,
+                                  ),
+                                  textAlign: TextAlign.left,
+                                )),
+                            Container(
+                              width: m_ScreenSize.width * .90,
+                              height: 2,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 20,
+                              ),
+                              alignment: Alignment.topLeft,
+                              child: Text("Дополнительно",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            Container(
+                                alignment: Alignment.topLeft,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 5,
+                                  horizontal: 20,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.topLeft,
+                                      margin: EdgeInsets.only(top: 0),
+                                      child: Text(
+                                        "- Ливадийский дворец – 400 взр 250 льгот 100 дет",
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13,
+                                        ),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                    Container(
+                                      alignment: Alignment.topLeft,
+                                      margin: EdgeInsets.only(top: 5),
+                                      child: Text(
+                                        "- Дворец Дюльбер – 350 руб/ чел",
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13,
+                                        ),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                    Container(
+                                      alignment: Alignment.topLeft,
+                                      margin: EdgeInsets.only(top: 5),
+                                      child: Text(
+                                        "- Массандровский дворец – 350 взр 250 льгот 150 дет",
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13,
+                                        ),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                            Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.only(top: 20, bottom: 10),
+                              child: FlatButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6.0),
+                                    side:
+                                        BorderSide(color: Colors.transparent)),
+                                minWidth: m_ScreenSize.width * .95,
+                                height: 60,
+                                color: Color.fromARGB(500, 0, 140, 255),
+                                onPressed: () {
+                                  if (_register != null) {
+                                    // if sign un
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return ConfirmOrder(id: widget.id);
+                                    }));
+                                  } else {
+                                    // if not sign in
+                                    showLoginNavigator(context);
+                                  }
+                                },
+                                child: Text("Забронировать",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                    )),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

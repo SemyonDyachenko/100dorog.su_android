@@ -71,17 +71,17 @@ class TabsPageState extends State<TabsPage> {
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,
-        selectedFontSize: 15,
-        unselectedFontSize: 13,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
         selectedItemColor: Color.fromARGB(500, 255, 45, 84),
         unselectedLabelStyle: TextStyle(color: Colors.black),
         selectedLabelStyle: TextStyle(color: Colors.black),
         selectedIconTheme:
-            IconThemeData(color: Color.fromARGB(500, 255, 45, 84), size: 26),
-        unselectedIconTheme: IconThemeData(color: Colors.black, size: 24),
+            IconThemeData(color: Color.fromARGB(500, 255, 45, 84), size: 22),
+        unselectedIconTheme: IconThemeData(color: Colors.black, size: 22),
         currentIndex: _currentIndex,
         onTap: (int index) => setState(() => _currentIndex = index),
-        showUnselectedLabels: false,
+        showUnselectedLabels: true,
         items: [
           for (final item in TabNavigationItem.items)
             BottomNavigationBarItem(

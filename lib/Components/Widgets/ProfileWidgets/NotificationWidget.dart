@@ -59,75 +59,42 @@ class _NotificationWidget extends State<NotificationWidget> {
                     color: Colors.grey[300],
                   ),
                   SizedBox(height: 10),
-                  Container(
-                    child: Row(
-                      children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              "Включить push-уведомления",
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.black),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              "Уведомления выключены",
-                              style:
-                                  TextStyle(fontSize: 13, color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            margin: EdgeInsets.only(left: 100),
-                            child: Icon(
-                              Icons.arrow_forward_ios,
-                              size: 14,
+                  FlatButton(
+                    padding: EdgeInsets.all(0),
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    onPressed: () {},
+                    child: Container(
+                      child: Row(
+                        children: <Widget>[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Включить push-уведомления",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.black),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                "Уведомления выключены",
+                                style:
+                                    TextStyle(fontSize: 13, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              margin: EdgeInsets.only(left: 100),
+                              child: Icon(
+                                Icons.arrow_forward_ios,
+                                size: 14,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  Container(
-                    width: m_ScreenSize.width,
-                    height: 1,
-                    color: Colors.grey[300],
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    child: Row(
-                      children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              "Включить push-уведомления",
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.black),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              "Уведомления выключены",
-                              style:
-                                  TextStyle(fontSize: 13, color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            margin: EdgeInsets.only(left: 100),
-                            child: Icon(
-                              Icons.arrow_forward_ios,
-                              size: 14,
-                            ),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(height: 15),
