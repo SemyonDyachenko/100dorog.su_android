@@ -14,6 +14,7 @@ class Order {
   String sum;
   String userId;
   String userEmail;
+  String bonusUsed;
 
   Order(
       {this.orderId,
@@ -26,7 +27,8 @@ class Order {
       this.isPayment,
       this.sum,
       this.userId,
-      this.userEmail});
+      this.userEmail,
+      this.bonusUsed});
 
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
@@ -41,6 +43,7 @@ class Order {
       sum: json['sum'] as String,
       userId: json['user_id'] as String,
       userEmail: json['user_email'] as String,
+      bonusUsed: json['bonus_used'] as String,
     );
   }
 
@@ -57,6 +60,7 @@ class Order {
       'sum': sum,
       'userId': userId,
       'userEmail': userEmail,
+      'bonusUsed': bonusUsed,
     };
   }
 }
@@ -70,7 +74,8 @@ createOrder(
     bool isPayment,
     int sum,
     int userId,
-    String userEmail) async {
+    String userEmail,
+    String bonusUsed) async {
   const url = "https://biquad.ru/dorogi/api/order/create.php";
   var data = {
     "type": type,
@@ -82,6 +87,7 @@ createOrder(
     "sum": sum.toString(),
     "user_id": userId.toString(),
     "user_email": userEmail,
+    "bonus_used": bonusUsed,
   };
 
   var response = await http.post(url, body: data);
@@ -89,13 +95,13 @@ createOrder(
 
   if (response.body != null) {
     if (responseArray['result'] == "success") {
-      return "success";
+      return responseArray['id'];
     } else if (responseArray['result'] == "error") {
       return "error";
     } else if (responseArray['result'] == "empty") {
       return "empty";
     } else {
-      return responseArray['result'];
+      return "Error";
     }
   } else {
     return "null";

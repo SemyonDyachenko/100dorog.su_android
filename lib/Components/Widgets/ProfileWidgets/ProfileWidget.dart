@@ -462,7 +462,10 @@ class _ProfileWidget extends State<ProfileWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                      _firstname == null || _firstname == ""
+                      _firstname == null ||
+                              _firstname == "" ||
+                              _lastname == "" ||
+                              _lastname == null
                           ? _phone.toString()
                           : _firstname + " " + _lastname,
                       style: TextStyle(
@@ -666,12 +669,12 @@ class _ProfileWidget extends State<ProfileWidget> {
                         children: <Widget>[
                           FlatButton(
                             color: Colors.blue,
-                            onPressed: () => launch("tel://+79180643382"),
+                            onPressed: () => launch("tel://+79883463211"),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(4.0),
                                 side: BorderSide(color: Colors.transparent)),
                             child: Text(
-                              "+7 918 064 33 82",
+                              "+7 988 346-32-11",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
@@ -682,7 +685,7 @@ class _ProfileWidget extends State<ProfileWidget> {
                           FlatButton(
                             color: Color.fromARGB(500, 59, 204, 122),
                             onPressed: () =>
-                                launch("whatsapp://send?phone=89673067936"),
+                                launch("whatsapp://send?phone=79883463211"),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(4.0),
                                 side: BorderSide(color: Colors.transparent)),

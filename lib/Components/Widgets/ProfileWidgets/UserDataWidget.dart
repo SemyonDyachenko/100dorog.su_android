@@ -250,13 +250,15 @@ class _UserDataWidget extends State<UserDataWidget> {
                               _lastnameController.text,
                               email)
                           .then((value) {
-                        addStringValueToSharedPrefs(
-                            "firstname", _firstnameController.text);
-                        addStringValueToSharedPrefs(
-                            "lastname", _lastnameController.text);
-                        addStringValueToSharedPrefs(
-                            "phone", _phoneController.text);
-                        Navigator.pop(context);
+                        if (value == "success") {
+                          addStringValueToSharedPrefs(
+                              "firstname", _firstnameController.text);
+                          addStringValueToSharedPrefs(
+                              "lastname", _lastnameController.text);
+                          addStringValueToSharedPrefs(
+                              "phone", _phoneController.text);
+                          Navigator.pop(context);
+                        }
                       });
                     });
                   },

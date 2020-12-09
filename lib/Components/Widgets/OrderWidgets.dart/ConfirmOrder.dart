@@ -56,12 +56,20 @@ class _ConfirmOrder extends State<ConfirmOrder> {
       });
     });
 
-    getStringFromSharedPrefs("user_email").then((phone) {
-      getUserData(phone).then((value) {
-        setState(() {
-          _coinsCount = int.parse(value['coins']);
-          _endPrice();
-        });
+    getStringFromSharedPrefs("user_email").then((email) {
+      getUserData(email).then((value) {
+        if (int.parse(value['coins']) > ((normalPrice / 100) * 30)) {
+          int coins = int.parse(((normalPrice / 100) * 30).toString());
+          setState(() {
+            print(coins);
+            _endPrice();
+          });
+        } else {
+          setState(() {
+            _coinsCount = int.parse(value['coins'].toString());
+            _endPrice();
+          });
+        }
       });
     });
   }
@@ -566,6 +574,7 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                                         .then((id) {
                                       getStringFromSharedPrefs("user_email")
                                           .then((email) {
+                                        _endPrice();
                                         createOrder(
                                                 "tour_order",
                                                 tourData['name'].toString(),
@@ -576,19 +585,24 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                                                 false,
                                                 endPrice,
                                                 int.parse(id),
-                                                email.toString())
+                                                email.toString(),
+                                                _coinsCount.toString())
                                             .then((value) {
-                                          if (value == "success") {
+                                          if (value != "error" &&
+                                              value != "empty" &&
+                                              value != "success") {
                                             Navigator.push(context,
                                                 MaterialPageRoute(
                                                     builder: (context) {
                                               return YandexPayment(
-                                                  tourName: tourData['name'],
-                                                  sum: endPrice);
+                                                tourName: tourData['name'],
+                                                sum: endPrice,
+                                                user_id: int.parse(id),
+                                                orderId: int.parse(value),
+                                              );
                                             }));
                                           } else {
                                             print(value);
-                                            print("что то пошло не так");
                                           }
                                         });
                                       });

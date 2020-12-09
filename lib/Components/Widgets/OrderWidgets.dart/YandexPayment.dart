@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:travel/api/orders/order.dart';
+import 'package:travel/utils/CircularProgressBar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class YandexPayment extends StatefulWidget {
   final String tourName;
   final int sum;
+  final int user_id;
+  final int orderId;
 
-  const YandexPayment({Key key, @required this.tourName, @required this.sum})
+  const YandexPayment(
+      {Key key,
+      @required this.tourName,
+      @required this.sum,
+      @required this.user_id,
+      @required this.orderId})
       : super(key: key);
 
   _YandexPayment createState() => _YandexPayment();
@@ -17,6 +26,17 @@ class _YandexPayment extends State<YandexPayment> {
   final String quickpayForm = "shop";
   final String paymentType = "AC";
   final String receiver = "?receiver=79673067936";
+  List<Map<String, dynamic>> orders = List<Map<String, dynamic>>();
+  String order_id = "";
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      order_id = widget.orderId.toString();
+    });
+  }
 
   String initialUrl = "";
 
@@ -26,8 +46,12 @@ class _YandexPayment extends State<YandexPayment> {
         receiver +
         "&target=" +
         target +
+        "&need-email=" +
+        "true" +
         "&quickpay-form=" +
         quickpayForm +
+        "&label=" +
+        order_id +
         "&paymentType=" +
         paymentType +
         "&targets=" +

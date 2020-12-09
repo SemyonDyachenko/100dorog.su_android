@@ -120,21 +120,26 @@ class _OrdersWidget extends State<OrdersWidget> {
                     minWidth: 50,
                     padding: EdgeInsets.all(0),
                     onPressed: () async {
-                      deleteOrder(order_id).then((value) async {
-                        if (value == "success") {
-                          if (orders.length == 1) {
-                            orders.clear();
+                      if (status != "accepted") {
+                        deleteOrder(order_id).then((value) async {
+                          if (value == "success") {
+                            if (orders.length == 1) {
+                              orders.clear();
+                            }
+                            await refreshData();
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text("Заказ успешно удален"),
+                            ));
                           }
-                          await refreshData();
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                            content: Text("Заказ успешно удален"),
-                          ));
-                        }
-                      });
+                        });
+                      }
                     },
                     child: Icon(
                       Icons.close,
                       size: 16,
+                      color: status == "accepted"
+                          ? Colors.transparent
+                          : Colors.black,
                     ),
                   ),
                 ),
@@ -178,11 +183,13 @@ class _OrdersWidget extends State<OrdersWidget> {
                       EdgeInsets.only(top: 5, bottom: 5, left: 5, right: 5),
                   height: 25,
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(400, 112, 128, 144),
+                    color: status == "accepted"
+                        ? Colors.green[300]
+                        : Color.fromARGB(400, 112, 128, 144),
                     borderRadius: BorderRadius.circular(3),
                   ),
                   child: Text(
-                    status == "wait" ? "Ожидает оплаты" : "Подтверждение",
+                    status == "accepted" ? "Оплачен" : "Ожидает оплаты",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 12,
@@ -253,7 +260,7 @@ class _OrdersWidget extends State<OrdersWidget> {
                                   orders[i]['tourId'],
                                   orders[i]['orderDateTime'].toString(),
                                   orders[i]['status'].toString(),
-                                  allTours[int.parse(orders[i]['tourId'])]
+                                  allTours[int.parse(orders[i]['tourId']) - 1]
                                       ['url_path'],
                                   orders[i]['sum'].toString()),
                             SizedBox(height: 20),
