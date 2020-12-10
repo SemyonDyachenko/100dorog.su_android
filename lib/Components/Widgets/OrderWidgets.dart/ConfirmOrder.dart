@@ -52,24 +52,27 @@ class _ConfirmOrder extends State<ConfirmOrder> {
         tourData = value;
         normalPrice = int.parse(tourData['price']);
         childPrice = int.parse(tourData['child_price']);
-        _endPrice();
-      });
-    });
 
-    getStringFromSharedPrefs("user_email").then((email) {
-      getUserData(email).then((value) {
-        if (int.parse(value['coins']) > ((normalPrice / 100) * 30)) {
-          int coins = int.parse(((normalPrice / 100) * 30).toString());
-          setState(() {
-            print(coins);
-            _endPrice();
+        getStringFromSharedPrefs("user_email").then((email) {
+          getUserData(email).then((value) {
+            if (int.parse(value['coins']) > ((normalPrice / 100) * 30)) {
+              double norm_price = double.parse(normalPrice.toString());
+              double price = (norm_price / 100) * 30;
+              setState(() {
+                _coinsCount = price.toInt();
+                print(_coinsCount);
+                _endPrice();
+              });
+            } else {
+              setState(() {
+                _coinsCount = int.parse(value['coins'].toString());
+                _endPrice();
+              });
+            }
           });
-        } else {
-          setState(() {
-            _coinsCount = int.parse(value['coins'].toString());
-            _endPrice();
-          });
-        }
+        });
+
+        _endPrice();
       });
     });
   }
@@ -536,16 +539,24 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                                       activeColor: Colors.grey[200],
                                       hoverColor: Colors.grey[200],
                                       onChanged: (value) {
-                                        setState(() {
-                                          _applyCoins = value;
-                                          _endPrice();
-                                        });
+                                        _coinsCount > 0
+                                            ? setState(() {
+                                                _applyCoins = value;
+                                                _endPrice();
+                                              })
+                                            : _endPrice();
                                       },
                                     ),
                                   ),
-                                  Text("Списать доступные бонусы ? ",
+                                  Text(
+                                      _coinsCount > 0
+                                          ? "Списать доступные бонусы ? "
+                                          : " ",
                                       style: TextStyle(fontSize: 16)),
-                                  Text(_coinsCount.toString(),
+                                  Text(
+                                      _coinsCount > 0
+                                          ? _coinsCount.toString()
+                                          : " ",
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold)),
@@ -586,7 +597,10 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                                                 endPrice,
                                                 int.parse(id),
                                                 email.toString(),
-                                                _coinsCount.toString())
+                                                _coinsCount != null &&
+                                                        _coinsCount > 0
+                                                    ? _coinsCount.toString()
+                                                    : "0")
                                             .then((value) {
                                           if (value != "error" &&
                                               value != "empty" &&

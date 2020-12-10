@@ -73,7 +73,7 @@ class _MainPage extends State<MainPage> {
   }
 
   Widget mainTourCard(BuildContext context, int product_id, String name,
-      String url, String price) {
+      String url, String price, String location, String datetime) {
     var m_ScreenSize = MediaQuery.of(context).size;
     return FlatButton(
       onPressed: () {
@@ -96,7 +96,7 @@ class _MainPage extends State<MainPage> {
               color: Colors.black.withOpacity(0.3),
               spreadRadius: 0,
               blurRadius: 0,
-              offset: Offset(0, 1), // changes position of shadow
+              offset: Offset(0, 0), // changes position of shadow
             ),
           ],
         ),
@@ -142,7 +142,7 @@ class _MainPage extends State<MainPage> {
                           alignment: Alignment.topLeft,
                           margin: EdgeInsets.only(top: 5, left: 10),
                           child: Text(
-                            "Россия, Крым",
+                            location,
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 13,
@@ -152,7 +152,7 @@ class _MainPage extends State<MainPage> {
                           alignment: Alignment.topLeft,
                           margin: EdgeInsets.only(top: 10, left: 10),
                           child: Text(
-                            "07.11.2020 в 5:00",
+                            datetime,
                             style: TextStyle(
                               color: Colors.blue[400],
                               fontWeight: FontWeight.normal,
@@ -452,7 +452,7 @@ class _MainPage extends State<MainPage> {
                                                     color: Colors.grey[200],
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            10),
+                                                            7),
                                                     image: DecorationImage(
                                                       image: NetworkImage(
                                                           allTours[i]
@@ -602,7 +602,7 @@ class _MainPage extends State<MainPage> {
                                                     color: Colors.grey[200],
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            10),
+                                                            7),
                                                     image: DecorationImage(
                                                       image: NetworkImage(
                                                           allTours[i]
@@ -710,10 +710,10 @@ class _MainPage extends State<MainPage> {
                                               decoration: BoxDecoration(
                                                 color: Colors.grey[200],
                                                 borderRadius:
-                                                    BorderRadius.circular(10),
+                                                    BorderRadius.circular(7),
                                                 image: DecorationImage(
                                                   image: NetworkImage(
-                                                      'https://static.tildacdn.com/tild3031-3133-4934-a363-626433333835/WhatsApp_Image_2020-.jpeg'),
+                                                      allTours[i]['url_path']),
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -729,7 +729,7 @@ class _MainPage extends State<MainPage> {
                                                     alignment:
                                                         Alignment.bottomLeft,
                                                     child: Text(
-                                                      "Релакс-день",
+                                                      allTours[i]['name'],
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 15,
@@ -742,7 +742,8 @@ class _MainPage extends State<MainPage> {
                                                     alignment:
                                                         Alignment.bottomLeft,
                                                     child: Text(
-                                                      "1600 RUB",
+                                                      allTours[i]['price'] +
+                                                          ' RUB',
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 15,
@@ -790,11 +791,14 @@ class _MainPage extends State<MainPage> {
                               children: <Widget>[
                                 for (var i in needCount)
                                   mainTourCard(
-                                      context,
-                                      int.parse(allTours[i]['id']),
-                                      allTours[i]['name'],
-                                      allTours[i]['url_path'],
-                                      allTours[i]['price']),
+                                    context,
+                                    int.parse(allTours[i]['id']),
+                                    allTours[i]['name'],
+                                    allTours[i]['url_path'],
+                                    allTours[i]['price'],
+                                    allTours[i]['location'],
+                                    allTours[i]['event_date'],
+                                  ),
                               ],
                             ),
                           ),
