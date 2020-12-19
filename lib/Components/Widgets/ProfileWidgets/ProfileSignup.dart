@@ -109,7 +109,7 @@ class _ProfileSignup extends State<ProfileSignup> {
         break;
       case 'exists':
         setState(() {
-          authErrorCode = "Пользователь с такими телефоном уже существует";
+          authErrorCode = "Пользователь с такими e-mail уже существует";
         });
     }
   }

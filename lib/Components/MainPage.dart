@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:travel/Components/SearchPage.dart';
 import 'package:travel/api/auth/preferences.dart';
@@ -14,7 +16,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPage extends State<MainPage> {
   GlobalKey<RefreshIndicatorState> refreshKey;
-
+  var rng = new Random();
   ScrollController _scrollController = new ScrollController();
   List<Map<String, dynamic>> allTours = List<Map<String, dynamic>>();
   List needCount = [0, 1, 2];
@@ -72,16 +74,15 @@ class _MainPage extends State<MainPage> {
     super.dispose();
   }
 
-  Widget mainTourCard(BuildContext context, int product_id, String name,
-      String url, String price, String location, String datetime) {
+  Widget mainTourCard(BuildContext context, int element_id) {
     var m_ScreenSize = MediaQuery.of(context).size;
-    return FlatButton(
+    return int.parse(allTours[element_id]['purchased_seats']) < int.parse(allTours[element_id]['seats_count']) ? FlatButton(
       onPressed: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) {
-              return TourWidget(id: product_id);
+              return TourWidget(id: int.parse(allTours[element_id]['id']));
             },
           ),
         );
@@ -110,7 +111,7 @@ class _MainPage extends State<MainPage> {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(8), topRight: Radius.circular(8)),
                 image: DecorationImage(
-                  image: NetworkImage(url),
+                  image: NetworkImage(allTours[element_id]['url_path']),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -132,7 +133,7 @@ class _MainPage extends State<MainPage> {
                           alignment: Alignment.topLeft,
                           margin: EdgeInsets.only(top: 15, left: 10),
                           child: Text(
-                            name,
+                            allTours[element_id]['name'],
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -142,7 +143,7 @@ class _MainPage extends State<MainPage> {
                           alignment: Alignment.topLeft,
                           margin: EdgeInsets.only(top: 5, left: 10),
                           child: Text(
-                            location,
+                            allTours[element_id]['location'],
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 13,
@@ -152,7 +153,7 @@ class _MainPage extends State<MainPage> {
                           alignment: Alignment.topLeft,
                           margin: EdgeInsets.only(top: 10, left: 10),
                           child: Text(
-                            datetime,
+                            allTours[element_id]['event_date'],
                             style: TextStyle(
                               color: Colors.blue[400],
                               fontWeight: FontWeight.normal,
@@ -170,7 +171,7 @@ class _MainPage extends State<MainPage> {
                             right: 10,
                           ),
                           child: Text(
-                            price + " RUB/",
+                            allTours[element_id]['price'] + " RUB/",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -211,7 +212,157 @@ class _MainPage extends State<MainPage> {
           ],
         ),
       ),
-    );
+    ) : Container();
+  }
+
+  Widget smallTourCard(BuildContext context,int element_id) {
+    var m_ScreenSize = MediaQuery.of(context).size;
+    return  int.parse(allTours[element_id]['purchased_seats']) < int.parse(allTours[element_id]['seats_count']) ? FlatButton(
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      minWidth: m_ScreenSize.width / 3,
+      padding: EdgeInsets.all(0),
+      onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(
+                builder: (context) {
+                  return TourWidget(
+                      id: int.parse(
+                          allTours[element_id]['id']));
+                }));
+      },
+      child: Column(
+        crossAxisAlignment:
+        CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(
+                left: 0, right: 15),
+            width: 150,
+            height: 155,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius:
+              BorderRadius.circular(
+                  7),
+              image: DecorationImage(
+                image: NetworkImage(
+                    allTours[element_id]
+                    ['url_path']),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(
+                top: 10, bottom: 0),
+            alignment:
+            Alignment.bottomLeft,
+            child: Text(
+              allTours[element_id]['name'],
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight:
+                FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(
+                top: 5, bottom: 10),
+            alignment:
+            Alignment.bottomLeft,
+            child: Row(
+              mainAxisAlignment:
+              MainAxisAlignment.start,
+              children: <Widget>[
+                Icon(Icons.location_on,
+                    color: Colors.blue),
+                Text(
+                  allTours[element_id]['location'],
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 15,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ) : Container();
+  }
+
+  Widget bigTourCard(BuildContext context,int element_id) {
+    var m_ScreenSize = MediaQuery.of(context).size;
+    return  int.parse(allTours[element_id]['purchased_seats']) < int.parse(allTours[element_id]['seats_count']) ?  FlatButton(
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      minWidth: m_ScreenSize.width / 3,
+      padding: EdgeInsets.only(
+          top: 5, bottom: 5),
+      onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(
+                builder: (context) {
+                  return TourWidget(
+                      id: int.parse(
+                          allTours[element_id]['id']));
+                }));
+      },
+      child: Container(
+        margin: EdgeInsets.only(
+            left: 0, right: 15),
+        width: 200,
+        height: 280,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius:
+          BorderRadius.circular(7),
+          image: DecorationImage(
+            image: NetworkImage(
+                allTours[element_id]['url_path']),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment:
+          CrossAxisAlignment.start,
+          mainAxisAlignment:
+          MainAxisAlignment.end,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(
+                  left: 10, bottom: 5),
+              alignment:
+              Alignment.bottomLeft,
+              child: Text(
+                allTours[element_id]['name'],
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                  left: 10, bottom: 10),
+              alignment:
+              Alignment.bottomLeft,
+              child: Text(
+                allTours[element_id]['price'] +
+                    ' RUB',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ) : Container();
   }
 
   @override
@@ -424,82 +575,8 @@ class _MainPage extends State<MainPage> {
                                         vertical: 20, horizontal: 20),
                                     child: Row(
                                       children: <Widget>[
-                                        for (var i in text)
-                                          FlatButton(
-                                            highlightColor: Colors.transparent,
-                                            splashColor: Colors.transparent,
-                                            minWidth: m_ScreenSize.width / 3,
-                                            padding: EdgeInsets.all(0),
-                                            onPressed: () {
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
-                                                return TourWidget(
-                                                    id: int.parse(
-                                                        allTours[i]['id']));
-                                              }));
-                                            },
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: 0, right: 15),
-                                                  width: 150,
-                                                  height: 155,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey[200],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            7),
-                                                    image: DecorationImage(
-                                                      image: NetworkImage(
-                                                          allTours[i]
-                                                              ['url_path']),
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      top: 10, bottom: 0),
-                                                  alignment:
-                                                      Alignment.bottomLeft,
-                                                  child: Text(
-                                                    allTours[i]['name'],
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      top: 5, bottom: 10),
-                                                  alignment:
-                                                      Alignment.bottomLeft,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: <Widget>[
-                                                      Icon(Icons.location_on,
-                                                          color: Colors.blue),
-                                                      Text(
-                                                        allTours[i]['location'],
-                                                        style: TextStyle(
-                                                          color: Colors.blue,
-                                                          fontSize: 15,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                        for (var i=0;i < 4;i++)
+                                          smallTourCard(context,rng.nextInt(allTours.length)),
                                       ],
                                     ),
                                   ),
@@ -574,82 +651,8 @@ class _MainPage extends State<MainPage> {
                                         vertical: 20, horizontal: 20),
                                     child: Row(
                                       children: <Widget>[
-                                        for (var i in text)
-                                          FlatButton(
-                                            highlightColor: Colors.transparent,
-                                            splashColor: Colors.transparent,
-                                            minWidth: m_ScreenSize.width / 3,
-                                            padding: EdgeInsets.all(0),
-                                            onPressed: () {
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
-                                                return TourWidget(
-                                                    id: int.parse(
-                                                        allTours[i]['id']));
-                                              }));
-                                            },
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: 0, right: 15),
-                                                  width: 150,
-                                                  height: 155,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey[200],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            7),
-                                                    image: DecorationImage(
-                                                      image: NetworkImage(
-                                                          allTours[i]
-                                                              ['url_path']),
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      top: 10, bottom: 0),
-                                                  alignment:
-                                                      Alignment.bottomLeft,
-                                                  child: Text(
-                                                    allTours[i]['name'],
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      top: 5, bottom: 10),
-                                                  alignment:
-                                                      Alignment.bottomLeft,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: <Widget>[
-                                                      Icon(Icons.location_on,
-                                                          color: Colors.blue),
-                                                      Text(
-                                                        allTours[i]['location'],
-                                                        style: TextStyle(
-                                                          color: Colors.blue,
-                                                          fontSize: 15,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                        for (var i =0; i < 4;i++)
+                                            smallTourCard(context,rng.nextInt(allTours.length)),
                                       ],
                                     ),
                                   ),
@@ -694,66 +697,8 @@ class _MainPage extends State<MainPage> {
                                         vertical: 20, horizontal: 20),
                                     child: Row(
                                       children: <Widget>[
-                                        for (var i in text)
-                                          FlatButton(
-                                            highlightColor: Colors.transparent,
-                                            splashColor: Colors.transparent,
-                                            minWidth: m_ScreenSize.width / 3,
-                                            padding: EdgeInsets.only(
-                                                top: 5, bottom: 5),
-                                            onPressed: () {},
-                                            child: Container(
-                                              margin: EdgeInsets.only(
-                                                  left: 0, right: 15),
-                                              width: 200,
-                                              height: 280,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[200],
-                                                borderRadius:
-                                                    BorderRadius.circular(7),
-                                                image: DecorationImage(
-                                                  image: NetworkImage(
-                                                      allTours[i]['url_path']),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: <Widget>[
-                                                  Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 10, bottom: 5),
-                                                    alignment:
-                                                        Alignment.bottomLeft,
-                                                    child: Text(
-                                                      allTours[i]['name'],
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 15,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 10, bottom: 10),
-                                                    alignment:
-                                                        Alignment.bottomLeft,
-                                                    child: Text(
-                                                      allTours[i]['price'] +
-                                                          ' RUB',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 15,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
+                                        for (var i = 0;i < 4;i++)
+                                          bigTourCard(context,rng.nextInt(allTours.length)),
                                       ],
                                     ),
                                   ),
@@ -789,15 +734,10 @@ class _MainPage extends State<MainPage> {
                           SingleChildScrollView(
                             child: Column(
                               children: <Widget>[
-                                for (var i in needCount)
+                                for (var i =0; i < 3;i++)
                                   mainTourCard(
                                     context,
-                                    int.parse(allTours[i]['id']),
-                                    allTours[i]['name'],
-                                    allTours[i]['url_path'],
-                                    allTours[i]['price'],
-                                    allTours[i]['location'],
-                                    allTours[i]['event_date'],
+                                   rng.nextInt(allTours.length),
                                   ),
                               ],
                             ),

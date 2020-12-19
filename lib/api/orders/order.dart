@@ -15,6 +15,7 @@ class Order {
   String userId;
   String userEmail;
   String bonusUsed;
+  String seatsCount;
 
   Order(
       {this.orderId,
@@ -28,7 +29,7 @@ class Order {
       this.sum,
       this.userId,
       this.userEmail,
-      this.bonusUsed});
+      this.bonusUsed,this.seatsCount});
 
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
@@ -44,6 +45,7 @@ class Order {
       userId: json['user_id'] as String,
       userEmail: json['user_email'] as String,
       bonusUsed: json['bonus_used'] as String,
+      seatsCount: json['seats_count'] as String,
     );
   }
 
@@ -61,6 +63,7 @@ class Order {
       'userId': userId,
       'userEmail': userEmail,
       'bonusUsed': bonusUsed,
+      'seats_count': seatsCount,
     };
   }
 }
@@ -75,8 +78,8 @@ createOrder(
     int sum,
     int userId,
     String userEmail,
-    String bonusUsed) async {
-  const url = "https://biquad.ru/dorogi/api/order/create.php";
+    String bonusUsed,String seatsCount) async {
+  const url = "https://www.100dorog-servives.info/dorogi/api/order/create.php";
   var data = {
     "type": type,
     "tour_name": tourName,
@@ -88,6 +91,7 @@ createOrder(
     "user_id": userId.toString(),
     "user_email": userEmail,
     "bonus_used": bonusUsed,
+    "seats_count": seatsCount,
   };
 
   var response = await http.post(url, body: data);
@@ -109,7 +113,7 @@ createOrder(
 }
 
 getOrders(String userId) async {
-  const url = "https://biquad.ru/dorogi/api/order/get_all.php";
+  const url = "https://www.100dorog-servives.info/dorogi/api/order/get_all.php";
 
   var data = {"user_id": userId};
 
@@ -144,7 +148,7 @@ getOrders(String userId) async {
 }
 
 deleteOrder(String order_id) async {
-  const url = "https://biquad.ru/dorogi/api/order/delete.php";
+  const url = "https://www.100dorog-servives.info/dorogi/api/order/delete.php";
 
   var data = {"id": order_id};
 

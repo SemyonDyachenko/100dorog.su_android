@@ -24,7 +24,7 @@ class _ProfileLogin extends State<ProfileLogin> {
         break;
       case 'none':
         setState(() {
-          authErrorCode = "Пользователя с таким телефоном не существует";
+          authErrorCode = "Пользователя с таким e-mail не существует";
         });
         break;
       case 'error':

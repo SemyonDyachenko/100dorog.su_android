@@ -14,7 +14,8 @@ class OrdersWidget extends StatefulWidget {
 class _OrdersWidget extends State<OrdersWidget> {
   GlobalKey<RefreshIndicatorState> refreshKey;
   List<Map<String, dynamic>> orders = List<Map<String, dynamic>>();
-  List<Map<String, dynamic>> allTours = List<Map<String, dynamic>>();
+  bool haveResult = false;
+
 
   @override
   void initState() {
@@ -22,47 +23,47 @@ class _OrdersWidget extends State<OrdersWidget> {
     refreshKey = GlobalKey<RefreshIndicatorState>();
 
     getStringFromSharedPrefs("user_id").then((id) {
-      getOrders(id).then((value) {
-        setState(() {
-          if (value != null) {
-            orders = value;
-          } else {}
-        });
+      getOrders(id).then((result) {
+
+
+        if (result != null) {
+          setState(() {
+            orders = result;
+            haveResult = true;
+          });
+        } else {
+          haveResult=true;
+          setState(() {
+
+          });
+        }
+
+
       });
     });
 
-    getAllTours().then((value) {
-      if (value != "" && value != null) {
-        setState(() {
-          allTours = value;
-        });
-      } else {}
-    });
   }
 
   Future<Null> refreshData() async {
     await Future.delayed(Duration(seconds: 1));
 
     getStringFromSharedPrefs("user_id").then((id) {
-      getOrders(id).then((value) {
-        setState(() {
-          if (value != null) {
-            orders = value;
-          } else {
-            setState(() {});
-          }
-        });
-      });
-    });
+      getOrders(id).then((result) {
 
-    getAllTours().then((value) {
-      if (value != "" && value != null) {
-        setState(() {
-          allTours = value;
-        });
-      } else {
-        setState(() {});
-      }
+        if (result != null) {
+          setState(() {
+            orders = result;
+            haveResult = true;
+          });
+        } else {
+          haveResult=true;
+          setState(() {
+
+          });
+        }
+
+
+      });
     });
   }
 
@@ -73,7 +74,6 @@ class _OrdersWidget extends State<OrdersWidget> {
       String tour_id,
       String order_date,
       String status,
-      String img_url,
       String order_sum) {
     var m_ScreenSize = MediaQuery.of(context).size;
     return Padding(
@@ -204,15 +204,15 @@ class _OrdersWidget extends State<OrdersWidget> {
             ),
             Container(
               margin: EdgeInsets.only(top: 15, left: 15, bottom: 25),
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(img_url),
-                  fit: BoxFit.cover,
-                ),
+              child: FlatButton(
+                padding:EdgeInsets.all(5),
+                  materialTapTargetSize:
+                  MaterialTapTargetSize.shrinkWrap,
+                  onPressed: () {},
+                  color:  Color.fromARGB(400, 112, 128, 144),
+                  child: Text("Отменить бронирование",style:TextStyle(color:Colors.white,fontSize: 12))),
               ),
-            ),
+
           ],
         ),
       ),
@@ -223,8 +223,7 @@ class _OrdersWidget extends State<OrdersWidget> {
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
 
-    return allTours.isNotEmpty
-        ? Scaffold(
+    return  haveResult ?  Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
               automaticallyImplyLeading: false,
@@ -260,17 +259,14 @@ class _OrdersWidget extends State<OrdersWidget> {
                                   orders[i]['tourId'],
                                   orders[i]['orderDateTime'].toString(),
                                   orders[i]['status'].toString(),
-                                  allTours[int.parse(orders[i]['tourId']) - 1]
-                                      ['url_path'],
                                   orders[i]['sum'].toString()),
                             SizedBox(height: 20),
                           ],
                         )
-                      : Column(children: <Widget>[]),
+                      :circularProgressBar(),
                 ),
               ),
             ),
-          )
-        : circularProgressBar();
+          ) : circularProgressBar();
   }
 }

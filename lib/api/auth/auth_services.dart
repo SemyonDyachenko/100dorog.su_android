@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:travel/api/auth/preferences.dart';
 
 Future registerUser(String email, String password, bool remember) async {
-  const url = "https://www.biquad.ru/dorogi/api/user/add.php";
+  const url = "https://www.100dorog-servives.info/dorogi/api/user/add.php";
   var data = {"email": email, "password": password};
   var response = await http.post(url, body: data);
 
@@ -18,7 +18,7 @@ Future registerUser(String email, String password, bool remember) async {
 }
 
 Future<String> loginUser(String email, String password) async {
-  const url = "https://www.biquad.ru/dorogi/api/user/auth.php";
+  const url = "https://www.100dorog-servives.info/dorogi/api/user/auth.php";
   var data = {"email": email, "password": password};
   var response = await http.post(url, body: data);
   var responseCode = await jsonDecode(response.body)["result"];
@@ -31,7 +31,7 @@ class Tour {
   final String name;
   final String url_path;
   final String description;
-  final String option_description;
+  final String options_description;
   final String price;
   final String child_price;
   final String seats_count;
@@ -48,7 +48,7 @@ class Tour {
     this.name,
     this.url_path,
     this.description,
-    this.option_description,
+    this.options_description,
     this.price,
     this.child_price,
     this.seats_count,
@@ -67,7 +67,7 @@ class Tour {
       name: json['name'] as String,
       url_path: json['url_path'] as String,
       description: json['description'] as String,
-      option_description: json['option_description'] as String,
+      options_description: json['options_description'] as String,
       price: json['price'] as String,
       child_price: json['child_price'] as String,
       seats_count: json['seats_count'] as String,
@@ -87,7 +87,7 @@ class Tour {
       'name': name,
       'url_path': url_path,
       'description': description,
-      'option_description': option_description,
+      'options_description': options_description,
       'price': price,
       'child_price': child_price,
       'seats_count': seats_count,
@@ -103,7 +103,8 @@ class Tour {
 }
 
 getAllTours() async {
-  const url = "https://biquad.ru/dorogi/api/tour/all_tours.php";
+  const url =
+      "https://www.100dorog-servives.info/dorogi/api/tour/all_tours.php";
   var response = await http.post(url);
   var responseArray = jsonDecode(response.body);
 
@@ -129,7 +130,7 @@ getAllTours() async {
 }
 
 getTourById(int id) async {
-  const url = "https://biquad.ru/dorogi/api/tour/get_tour.php";
+  const url = "https://www.100dorog-servives.info/dorogi/api/tour/get_tour.php";
   var data = {"id": id.toString()};
   var response = await http.post(url, body: data);
   var responseArray = jsonDecode(response.body);
@@ -185,8 +186,20 @@ class User {
   }
 }
 
+deleteUser(String id) async {
+  const url = "https://www.100dorog-servives.info/dorogi/api/user/delete.php";
+  var secretKey = "7EEEahD6kDGW3vtoVwjZ1LJM069dmHdb";
+  var data = {"id": id,"key": secretKey};
+  var response = await http.post(url, body: data);
+  var responseArray = jsonDecode(response.body);
+
+  if (response.body != null) {
+    return responseArray['result'];
+  }
+}
+
 getUserData(String email) async {
-  const url = "https://www.biquad.ru/dorogi/api/user/data.php";
+  const url = "https://www.100dorog-servives.info/dorogi/api/user/data.php";
   var data = {"email": email};
   var response = await http.post(url, body: data);
   var responseArray = jsonDecode(response.body);
@@ -200,7 +213,8 @@ getUserData(String email) async {
 
 setContacts(
     String phone, String firstname, String lastname, String email) async {
-  const url = "https://www.biquad.ru/dorogi/api/user/update_contacts.php";
+  const url =
+      "https://www.100dorog-servives.info/dorogi/api/user/update_contacts.php";
   var data = {
     "phone": phone,
     "firstname": firstname,
@@ -219,7 +233,8 @@ void logoutUser() {
 }
 
 addCoins(String token, String email, String count) async {
-  const url = "https://www.biquad.ru/dorogi/api/user/add_coins.php";
+  const url =
+      "https://www.100dorog-servives.info/dorogi/api/user/add_coins.php";
   var data = {"token": token, "email": email, "count": count};
 
   var response = await http.post(url, body: data);
@@ -229,7 +244,8 @@ addCoins(String token, String email, String count) async {
 }
 
 getCoins(String email) async {
-  const url = "https://www.biquad.ru/dorogi/api/user/get_coins.php";
+  const url =
+      "https://www.100dorog-servives.info/dorogi/api/user/get_coins.php";
   var data = {"email": email};
 
   var response = await http.post(url, body: data);

@@ -19,7 +19,7 @@ class _SearchPage extends State<SearchPage> {
       String date, String url_path, String price, String location) {
     var m_ScreenSize = MediaQuery.of(context).size;
 
-    return Container(
+    return  Container(
       child: FlatButton(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         highlightColor: Colors.transparent,
@@ -51,7 +51,7 @@ class _SearchPage extends State<SearchPage> {
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
             ),
@@ -178,8 +178,9 @@ class _SearchPage extends State<SearchPage> {
                     childAspectRatio: width / height,
                     children: <Widget>[
                       for (var i = 0; i < allTours.length; i++)
-                        allTours.length > 0
-                            ? tourCard(
+                        if(allTours.length > 0
+                              && int.parse(allTours[i]['purchased_seats']) < int.parse(allTours[i]['seats_count']))
+                          tourCard(
                                 context,
                                 int.parse(allTours[i]['id']),
                                 allTours[i]['name'],
@@ -187,8 +188,8 @@ class _SearchPage extends State<SearchPage> {
                                 allTours[i]['url_path'].toString(),
                                 allTours[i]['price'].toString(),
                                 allTours[i]['location'].toString(),
-                              )
-                            : Container(),
+                              ),
+
                     ],
                   ),
                 ),

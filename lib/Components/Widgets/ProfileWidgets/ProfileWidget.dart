@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:http/http.dart' as http;
+import 'package:travel/Components/Widgets/ProfileWidgets/CopyrightWidget.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/FavoritesWidget.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/NotificationWidget.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/OrdersWidget.dart';
@@ -731,7 +732,11 @@ class _ProfileWidget extends State<ProfileWidget> {
               Container(
                 width: m_ScreenSize.width * .6,
                 child: FlatButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,MaterialPageRoute(builder: (context) {
+                      return CopyrightWidget();
+                    }));
+                  },
                   child: Text(
                     "Политика обработки данных и информации v 1.0.0",
                     textAlign: TextAlign.center,

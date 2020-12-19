@@ -429,12 +429,14 @@ class _TourWidget extends State<TourWidget> {
                                               });
                                             } else {
                                               addFavorite(id.toString(),
-                                                      widget.id.toString())
+                                                      widget.id.toString(),tourData['url_path'].toString(),tourData['price'].toString(),tourData['location'].toString(),tourData['name'].toString())
                                                   .then((value) {
                                                 if (value != "error") {
+
                                                   setState(() {
                                                     _isFavorite = true;
                                                   });
+
                                                   Scaffold.of(context)
                                                       .showSnackBar(SnackBar(
                                                     content: Text(
@@ -526,31 +528,7 @@ class _TourWidget extends State<TourWidget> {
                                       alignment: Alignment.topLeft,
                                       margin: EdgeInsets.only(top: 0),
                                       child: Text(
-                                        "- Ливадийский дворец – 400 взр 250 льгот 100 дет",
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 13,
-                                        ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                    Container(
-                                      alignment: Alignment.topLeft,
-                                      margin: EdgeInsets.only(top: 5),
-                                      child: Text(
-                                        "- Дворец Дюльбер – 350 руб/ чел",
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 13,
-                                        ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                    Container(
-                                      alignment: Alignment.topLeft,
-                                      margin: EdgeInsets.only(top: 5),
-                                      child: Text(
-                                        "- Массандровский дворец – 350 взр 250 льгот 150 дет",
+                                        tourData['options_description'],
                                         style: TextStyle(
                                           color: Colors.grey,
                                           fontSize: 13,

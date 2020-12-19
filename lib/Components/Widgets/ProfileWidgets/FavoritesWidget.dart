@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travel/Components/Widgets/TourWidget.dart';
 import 'package:travel/api/auth/auth_services.dart';
 import 'package:travel/api/auth/preferences.dart';
 import 'package:travel/api/favorites/favorites.dart';
@@ -12,6 +13,7 @@ class _FavoritesWidget extends State<FavoritesWidget> {
   GlobalKey<RefreshIndicatorState> refreshKey;
   List<Map<String, dynamic>> favorites = List<Map<String, dynamic>>();
   List<Map<String, dynamic>> tours = List<Map<String, dynamic>>();
+  bool areLoading = false;
 
   @override
   void initState() {
@@ -27,16 +29,19 @@ class _FavoritesWidget extends State<FavoritesWidget> {
           setState(() {
             favorites = value;
           });
-        } else {}
+
+          setState(() {
+            areLoading = true;
+          });
+        } else {
+          setState(() {
+            favorites = null;
+          });
+
+        }
       });
 
-      getAllTours().then((value) {
-        if (value != "" && value != null) {
-          setState(() {
-            tours = value;
-          });
-        } else {}
-      });
+
     });
   }
 
@@ -50,30 +55,30 @@ class _FavoritesWidget extends State<FavoritesWidget> {
             value != "error" &&
             value != "empty") {
           setState(() {
-            favorites = value;
+              favorites = value;
           });
-        } else {}
+
+          setState(() {
+            areLoading = true;
+          });
+        } else {
+          setState(() {
+            favorites = null;
+          });
+
+        }
       });
 
-      getAllTours().then((value) {
-        if (value != "" && value != null) {
-          setState(() {
-            tours = value;
-          });
-        } else {}
-      });
+
     });
   }
 
   Widget favoriteCard(
       BuildContext context,
       String id,
-      String tour_id,
-      String tour_name,
-      String tour_date,
-      String url_path,
-      String price,
-      String location) {
+      String tour_id,String name,String location,String price,String url_path) {
+
+
     var m_ScreenSize = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 15),
@@ -100,7 +105,7 @@ class _FavoritesWidget extends State<FavoritesWidget> {
                 Container(
                   margin: EdgeInsets.only(top: 5, left: 15),
                   child: Text(
-                    tour_name,
+                    name,
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -120,7 +125,9 @@ class _FavoritesWidget extends State<FavoritesWidget> {
                              if (favorites.length == 1) {
                             favorites.clear();
                           }
-                            await refreshData();
+                             await refreshData();
+
+
                             Scaffold.of(context).showSnackBar(SnackBar(
                               content: Text("Тур удален из списка Избранное"),
                             ));
@@ -139,7 +146,7 @@ class _FavoritesWidget extends State<FavoritesWidget> {
             Container(
               margin: EdgeInsets.only(top: 5, left: 15),
               child: Text(
-                tour_date,
+                "Добавлен в избранное",
                 style: TextStyle(
                     color: Colors.blue,
                     fontSize: 13,
@@ -168,21 +175,31 @@ class _FavoritesWidget extends State<FavoritesWidget> {
                   ),
                 ),
                 SizedBox(width: 10),
-                Container(
-                  margin: EdgeInsets.only(top: 15, left: 15),
-                  padding:
-                      EdgeInsets.only(top: 5, bottom: 5, left: 5, right: 5),
-                  height: 25,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(400, 112, 128, 144),
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                  child: Text(
-                    "Подробнее",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold),
+                FlatButton(
+                  padding: EdgeInsets.all(0),
+                  materialTapTargetSize:
+                  MaterialTapTargetSize.shrinkWrap,
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      return TourWidget(id: int.parse(tour_id));
+                    }));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(top: 15, left: 15),
+                    padding:
+                        EdgeInsets.only(top: 5, bottom: 5, left: 5, right: 5),
+                    height: 25,
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(400, 112, 128, 144),
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    child: Text(
+                      "Подробнее",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ],
@@ -201,7 +218,8 @@ class _FavoritesWidget extends State<FavoritesWidget> {
                   fit: BoxFit.cover,
                 ),
               ),
-            ),
+              ),
+
           ],
         ),
       ),
@@ -212,7 +230,7 @@ class _FavoritesWidget extends State<FavoritesWidget> {
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
 
-    return tours.isNotEmpty
+    return areLoading
         ? Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
@@ -237,7 +255,7 @@ class _FavoritesWidget extends State<FavoritesWidget> {
               },
               child: Builder(
                 builder: (context) => SingleChildScrollView(
-                    child: favorites.isNotEmpty
+                    child: favorites != null && favorites.isNotEmpty
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -245,18 +263,7 @@ class _FavoritesWidget extends State<FavoritesWidget> {
                                 favoriteCard(
                                     context,
                                     favorites[i]['id'],
-                                    favorites[i]['tour_id'],
-                                    tours[int.parse(favorites[i]['tour_id']) - 1]
-                                        ['name'],
-                                    tours[int.parse(favorites[i]['tour_id']) -
-                                            1]['event_date']
-                                        .toString(),
-                                    tours[int.parse(favorites[i]['tour_id']) -
-                                        1]['url_path'],
-                                    tours[int.parse(favorites[i]['tour_id']) -
-                                        1]['price'],
-                                    tours[int.parse(favorites[i]['tour_id']) -
-                                        1]['location']),
+                                    favorites[i]['tour_id'],favorites[i]['name'],favorites[i]['location'],favorites[i]['price'],favorites[i]['url_path']),
                               SizedBox(height: 20),
                             ],
                           )

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:travel/api/auth/auth_services.dart';
+import 'package:travel/api/auth/preferences.dart';
 
 class ProfileSettings extends StatefulWidget {
   _ProfileSettings createState() => _ProfileSettings();
 }
 
 class _ProfileSettings extends State<ProfileSettings> {
+
+
   createDeleteDialog(BuildContext context) {
     return showDialog(
         context: context,
@@ -30,7 +35,19 @@ class _ProfileSettings extends State<ProfileSettings> {
                     )),
               ),
               FlatButton(
-                onPressed: () {},
+                onPressed: () {
+                  getStringFromSharedPrefs("user_id").then((id) {
+                    deleteUser(id).then((value) {
+                      if(value == "success") {
+                        clearSharedPrefs();
+                        Phoenix.rebirth(context);
+                      }
+                      else {
+                        Navigator.pop(context);
+                      }
+                    });
+                  });
+                },
                 color: Color.fromARGB(200, 247, 72, 72),
                 child: Text("Да"),
               ),

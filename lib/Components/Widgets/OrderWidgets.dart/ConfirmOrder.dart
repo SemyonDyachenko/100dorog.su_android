@@ -39,6 +39,7 @@ class _ConfirmOrder extends State<ConfirmOrder> {
             _coinsCount;
       } else {
         endPrice = (normalPrice * _passengerCount) + (_childCount * childPrice);
+        _allCount = _passengerCount + _childCount;
       }
     });
   }
@@ -233,7 +234,7 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                                           margin:
                                               EdgeInsets.only(left: 20, top: 5),
                                           child: Text(
-                                            "Больше 14 лет",
+                                            "Старше 14 лет",
                                             style:
                                                 TextStyle(color: Colors.grey),
                                           ),
@@ -598,9 +599,9 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                                                 int.parse(id),
                                                 email.toString(),
                                                 _coinsCount != null &&
-                                                        _coinsCount > 0
+                                                        _coinsCount > 0 && _applyCoins
                                                     ? _coinsCount.toString()
-                                                    : "0")
+                                                    : "0",_allCount.toString())
                                             .then((value) {
                                           if (value != "error" &&
                                               value != "empty" &&

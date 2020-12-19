@@ -25,7 +25,7 @@ class _YandexPayment extends State<YandexPayment> {
   final String target = "Бронирование тура";
   final String quickpayForm = "shop";
   final String paymentType = "AC";
-  final String receiver = "?receiver=79673067936";
+  final String receiver = "?receiver=79881325148";
   List<Map<String, dynamic>> orders = List<Map<String, dynamic>>();
   String order_id = "";
 
