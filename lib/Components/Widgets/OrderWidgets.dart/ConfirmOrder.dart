@@ -424,8 +424,12 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                                       Icon(Icons.money),
                                       SizedBox(width: 5),
                                       Text(
-                                        "Вы получите бонусы: " +
-                                            tourData['bonus_count'],
+                                        tourData['promotion'] != "1"
+                                            ? "Вы получите кешбек: " +
+                                                (((endPrice / 100) * 7).toInt())
+                                                    .toString() +
+                                                " (7 %)"
+                                            : "Специальное предложение",
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.normal,
@@ -532,30 +536,36 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                               child: Row(
                                 children: <Widget>[
                                   Theme(
-                                    data: ThemeData(
-                                        unselectedWidgetColor: Colors.white),
-                                    child: Checkbox(
-                                      value: _applyCoins,
-                                      checkColor: Colors.black,
-                                      activeColor: Colors.grey[200],
-                                      hoverColor: Colors.grey[200],
-                                      onChanged: (value) {
-                                        _coinsCount > 0
-                                            ? setState(() {
-                                                _applyCoins = value;
-                                                _endPrice();
-                                              })
-                                            : _endPrice();
-                                      },
-                                    ),
-                                  ),
+                                      data: ThemeData(
+                                          unselectedWidgetColor: Colors.white),
+                                      child: _coinsCount > 0 &&
+                                              tourData['promotion'] != "1"
+                                          ? Checkbox(
+                                              value: _applyCoins,
+                                              checkColor: Colors.black,
+                                              activeColor: Colors.grey[200],
+                                              hoverColor: Colors.grey[200],
+                                              onChanged: (value) {
+                                                _coinsCount > 0 &&
+                                                        tourData['promotion'] !=
+                                                            "1"
+                                                    ? setState(() {
+                                                        _applyCoins = value;
+                                                        _endPrice();
+                                                      })
+                                                    : _endPrice();
+                                              },
+                                            )
+                                          : Text("")),
                                   Text(
-                                      _coinsCount > 0
+                                      _coinsCount > 0 &&
+                                              tourData['promotion'] != "1"
                                           ? "Списать доступные бонусы ? "
                                           : " ",
                                       style: TextStyle(fontSize: 16)),
                                   Text(
-                                      _coinsCount > 0
+                                      _coinsCount > 0 &&
+                                              tourData['promotion'] != "1"
                                           ? _coinsCount.toString()
                                           : " ",
                                       style: TextStyle(
@@ -599,9 +609,11 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                                                 int.parse(id),
                                                 email.toString(),
                                                 _coinsCount != null &&
-                                                        _coinsCount > 0 && _applyCoins
+                                                        _coinsCount > 0 &&
+                                                        _applyCoins
                                                     ? _coinsCount.toString()
-                                                    : "0",_allCount.toString())
+                                                    : "0",
+                                                _allCount.toString())
                                             .then((value) {
                                           if (value != "error" &&
                                               value != "empty" &&

@@ -83,7 +83,7 @@ class _ProfileLogin extends State<ProfileLogin> {
                     height: 60.0,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.circular(6.0),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black12,
@@ -124,7 +124,7 @@ class _ProfileLogin extends State<ProfileLogin> {
                     height: 60.0,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.circular(6.0),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black12,
@@ -194,7 +194,7 @@ class _ProfileLogin extends State<ProfileLogin> {
                   },
                   padding: EdgeInsets.all(15.0),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(6.0),
                   ),
                   color: Color.fromARGB(500, 0, 132, 255),
                   child: Text("Войти",

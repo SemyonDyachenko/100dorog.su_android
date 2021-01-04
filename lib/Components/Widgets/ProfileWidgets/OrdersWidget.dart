@@ -16,7 +16,6 @@ class _OrdersWidget extends State<OrdersWidget> {
   List<Map<String, dynamic>> orders = List<Map<String, dynamic>>();
   bool haveResult = false;
 
-
   @override
   void initState() {
     super.initState();
@@ -24,24 +23,17 @@ class _OrdersWidget extends State<OrdersWidget> {
 
     getStringFromSharedPrefs("user_id").then((id) {
       getOrders(id).then((result) {
-
-
         if (result != null) {
           setState(() {
             orders = result;
             haveResult = true;
           });
         } else {
-          haveResult=true;
-          setState(() {
-
-          });
+          haveResult = true;
+          setState(() {});
         }
-
-
       });
     });
-
   }
 
   Future<Null> refreshData() async {
@@ -49,32 +41,21 @@ class _OrdersWidget extends State<OrdersWidget> {
 
     getStringFromSharedPrefs("user_id").then((id) {
       getOrders(id).then((result) {
-
         if (result != null) {
           setState(() {
             orders = result;
             haveResult = true;
           });
         } else {
-          haveResult=true;
-          setState(() {
-
-          });
+          haveResult = true;
+          setState(() {});
         }
-
-
       });
     });
   }
 
-  Widget orderCard(
-      BuildContext context,
-      String order_id,
-      String order_name,
-      String tour_id,
-      String order_date,
-      String status,
-      String order_sum) {
+  Widget orderCard(BuildContext context, String order_id, String order_name,
+      String tour_id, String order_date, String status, String order_sum) {
     var m_ScreenSize = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 15),
@@ -202,17 +183,21 @@ class _OrdersWidget extends State<OrdersWidget> {
               margin: EdgeInsets.only(top: 20, left: 15, bottom: 10),
               child: Text("Сумма заказа: " + order_sum + " RUB"),
             ),
-            Container(
-              margin: EdgeInsets.only(top: 15, left: 15, bottom: 25),
-              child: FlatButton(
-                padding:EdgeInsets.all(5),
-                  materialTapTargetSize:
-                  MaterialTapTargetSize.shrinkWrap,
-                  onPressed: () {},
-                  color:  Color.fromARGB(400, 112, 128, 144),
-                  child: Text("Отменить бронирование",style:TextStyle(color:Colors.white,fontSize: 12))),
-              ),
-
+            status == "accepted"
+                ? Container(
+                    margin: EdgeInsets.only(top: 15, left: 15, bottom: 25),
+                    child: FlatButton(
+                        padding: EdgeInsets.all(5),
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        onPressed: () {},
+                        color: Color.fromARGB(400, 112, 128, 144),
+                        child: Text("Отменить бронирование",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 12))),
+                  )
+                : Container(
+                    height: 10,
+                  ),
           ],
         ),
       ),
@@ -223,7 +208,8 @@ class _OrdersWidget extends State<OrdersWidget> {
   Widget build(BuildContext context) {
     var m_ScreenSize = MediaQuery.of(context).size;
 
-    return  haveResult ?  Scaffold(
+    return haveResult
+        ? Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
               automaticallyImplyLeading: false,
@@ -263,10 +249,11 @@ class _OrdersWidget extends State<OrdersWidget> {
                             SizedBox(height: 20),
                           ],
                         )
-                      :circularProgressBar(),
+                      : circularProgressBar(),
                 ),
               ),
             ),
-          ) : circularProgressBar();
+          )
+        : circularProgressBar();
   }
 }

@@ -110,7 +110,7 @@ class _TourWidget extends State<TourWidget> {
                       margin: EdgeInsets.only(top: 10),
                       alignment: Alignment.topCenter,
                       child: Text(
-                        "Вы не авторизированы",
+                        "Требуется авторизация",
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
@@ -147,39 +147,6 @@ class _TourWidget extends State<TourWidget> {
                               onPressed: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return ProfileSignup();
-                                }));
-                              },
-                              padding: EdgeInsets.all(10.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(100.0),
-                              ),
-                              color: Color.fromARGB(500, 0, 132, 255),
-                              child: Text("Регистрация",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: 1.5,
-                                  )),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 20),
-                      width: MediaQuery.of(context).size.width,
-                      child: Stack(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.center,
-                            child: FlatButton(
-                              minWidth: 200,
-                              height: 50,
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
                                   return ProfileLogin();
                                 }));
                               },
@@ -188,7 +155,7 @@ class _TourWidget extends State<TourWidget> {
                                 borderRadius: BorderRadius.circular(100.0),
                               ),
                               color: Color.fromARGB(500, 0, 132, 255),
-                              child: Text("Войти",
+                              child: Text("Авторизация",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -305,7 +272,9 @@ class _TourWidget extends State<TourWidget> {
                                 alignment: Alignment.topLeft,
                                 margin: EdgeInsets.only(left: 20),
                                 child: Text(
-                                  tourData['name'],
+                                  tourData['promotion'] == "1"
+                                      ? tourData['name'] + " (Акция)"
+                                      : tourData['name'],
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -428,11 +397,19 @@ class _TourWidget extends State<TourWidget> {
                                                 }
                                               });
                                             } else {
-                                              addFavorite(id.toString(),
-                                                      widget.id.toString(),tourData['url_path'].toString(),tourData['price'].toString(),tourData['location'].toString(),tourData['name'].toString())
+                                              addFavorite(
+                                                      id.toString(),
+                                                      widget.id.toString(),
+                                                      tourData['url_path']
+                                                          .toString(),
+                                                      tourData['price']
+                                                          .toString(),
+                                                      tourData['location']
+                                                          .toString(),
+                                                      tourData['name']
+                                                          .toString())
                                                   .then((value) {
                                                 if (value != "error") {
-
                                                   setState(() {
                                                     _isFavorite = true;
                                                   });

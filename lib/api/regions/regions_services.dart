@@ -25,7 +25,7 @@ class Region {
 }
 
 getAllRegions() async {
-  const url = "https://www.biquad.ru/dorogi/api/region/all.php";
+  const url = "https://100dorog-servives.info/dorogi/api/region/all.php";
   var response = await http.post(url);
   var responseArray = jsonDecode(response.body);
 

@@ -42,6 +42,8 @@ class Tour {
   final String bonus_canused;
   final String event_datetime;
   final String location;
+  final String promotion;
+  final String promotion_days_count;
 
   Tour({
     this.id,
@@ -59,6 +61,8 @@ class Tour {
     this.bonus_canused,
     this.event_datetime,
     this.location,
+    this.promotion,
+    this.promotion_days_count,
   });
 
   factory Tour.fromJson(Map<String, dynamic> json) {
@@ -78,6 +82,8 @@ class Tour {
       bonus_canused: json['bonus_canused'] as String,
       event_datetime: json['event_date'] as String,
       location: json['location'] as String,
+      promotion: json['promotion'] as String,
+      promotion_days_count: json['promotion_days_count'] as String,
     );
   }
 
@@ -98,6 +104,8 @@ class Tour {
       'bonus_canused': bonus_canused,
       'event_date': event_datetime,
       'location': location,
+      'promotion': promotion,
+      'promotion_days_count': promotion_days_count,
     };
   }
 }
@@ -189,7 +197,7 @@ class User {
 deleteUser(String id) async {
   const url = "https://www.100dorog-servives.info/dorogi/api/user/delete.php";
   var secretKey = "7EEEahD6kDGW3vtoVwjZ1LJM069dmHdb";
-  var data = {"id": id,"key": secretKey};
+  var data = {"id": id, "key": secretKey};
   var response = await http.post(url, body: data);
   var responseArray = jsonDecode(response.body);
 

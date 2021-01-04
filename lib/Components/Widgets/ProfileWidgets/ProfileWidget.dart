@@ -718,7 +718,8 @@ class _ProfileWidget extends State<ProfileWidget> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6.0),
                       side: BorderSide(color: Colors.transparent)),
-                  onPressed: () {},
+                  onPressed: () =>
+                      launch("market://details?id=com.dorog.travel"),
                   child: Text(
                     "Оцените наше приложение",
                     style: TextStyle(
@@ -733,7 +734,8 @@ class _ProfileWidget extends State<ProfileWidget> {
                 width: m_ScreenSize.width * .6,
                 child: FlatButton(
                   onPressed: () {
-                    Navigator.push(context,MaterialPageRoute(builder: (context) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
                       return CopyrightWidget();
                     }));
                   },

@@ -76,293 +76,319 @@ class _MainPage extends State<MainPage> {
 
   Widget mainTourCard(BuildContext context, int element_id) {
     var m_ScreenSize = MediaQuery.of(context).size;
-    return int.parse(allTours[element_id]['purchased_seats']) < int.parse(allTours[element_id]['seats_count']) ? FlatButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return TourWidget(id: int.parse(allTours[element_id]['id']));
-            },
-          ),
-        );
-      },
-      child: Container(
-        margin: EdgeInsets.only(left: 0, right: 0, bottom: 15),
-        width: m_ScreenSize.width * .90,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              spreadRadius: 0,
-              blurRadius: 0,
-              offset: Offset(0, 0), // changes position of shadow
-            ),
-          ],
-        ),
-        child: Column(
-          children: <Widget>[
-            Container(
-              width: m_ScreenSize.width * .90,
-              height: 180,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-                image: DecorationImage(
-                  image: NetworkImage(allTours[element_id]['url_path']),
-                  fit: BoxFit.cover,
+    return int.parse(allTours[element_id]['purchased_seats']) <
+            int.parse(allTours[element_id]['seats_count'])
+        ? FlatButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return TourWidget(
+                        id: int.parse(allTours[element_id]['id']));
+                  },
                 ),
-              ),
-            ),
-            Container(
+              );
+            },
+            child: Container(
+              margin: EdgeInsets.only(left: 0, right: 0, bottom: 15),
               width: m_ScreenSize.width * .90,
-              height: 105,
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(8),
-                    bottomRight: Radius.circular(8)),
-              ),
-              child: Stack(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Container(
-                          alignment: Alignment.topLeft,
-                          margin: EdgeInsets.only(top: 15, left: 10),
-                          child: Text(
-                            allTours[element_id]['name'],
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          )),
-                      Container(
-                          alignment: Alignment.topLeft,
-                          margin: EdgeInsets.only(top: 5, left: 10),
-                          child: Text(
-                            allTours[element_id]['location'],
-                            style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 13,
-                            ),
-                          )),
-                      Container(
-                          alignment: Alignment.topLeft,
-                          margin: EdgeInsets.only(top: 10, left: 10),
-                          child: Text(
-                            allTours[element_id]['event_date'],
-                            style: TextStyle(
-                              color: Colors.blue[400],
-                              fontWeight: FontWeight.normal,
-                              fontSize: 13,
-                            ),
-                          )),
-                    ],
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    spreadRadius: 0,
+                    blurRadius: 0,
+                    offset: Offset(0, 0), // changes position of shadow
                   ),
-                  Column(
-                    children: <Widget>[
-                      Container(
-                          alignment: Alignment.topRight,
-                          margin: EdgeInsets.only(
-                            top: 15,
-                            right: 10,
-                          ),
-                          child: Text(
-                            allTours[element_id]['price'] + " RUB/",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          )),
-                      Container(
-                          alignment: Alignment.topRight,
-                          margin: EdgeInsets.only(
-                            top: 5,
-                            right: 10,
-                          ),
-                          child: Text(
-                            "Взрослый",
-                            style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 13,
-                            ),
-                          )),
-                      Container(
-                          alignment: Alignment.topRight,
-                          margin: EdgeInsets.only(
-                            top: 10,
-                            right: 10,
-                          ),
-                          child: Text(
-                            "Подробнее",
-                            style: TextStyle(
-                              color: Colors.blue[400],
-                              fontWeight: FontWeight.normal,
-                              fontSize: 13,
-                            ),
-                          )),
-                    ],
+                ],
+              ),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    width: m_ScreenSize.width * .90,
+                    height: 180,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8)),
+                      image: DecorationImage(
+                        image: NetworkImage(allTours[element_id]['url_path']),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: m_ScreenSize.width * .90,
+                    height: 105,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(8),
+                          bottomRight: Radius.circular(8)),
+                    ),
+                    child: Stack(
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            Container(
+                                alignment: Alignment.topLeft,
+                                margin: EdgeInsets.only(top: 15, left: 10),
+                                child: Text(
+                                  allTours[element_id]['name'],
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                )),
+                            Container(
+                                alignment: Alignment.topLeft,
+                                margin: EdgeInsets.only(top: 5, left: 10),
+                                child: Text(
+                                  allTours[element_id]['location'],
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 13,
+                                  ),
+                                )),
+                            Container(
+                                alignment: Alignment.topLeft,
+                                margin: EdgeInsets.only(top: 10, left: 10),
+                                child: Text(
+                                  allTours[element_id]['event_date'],
+                                  style: TextStyle(
+                                    color: Colors.blue[400],
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 13,
+                                  ),
+                                )),
+                          ],
+                        ),
+                        Column(
+                          children: <Widget>[
+                            Container(
+                                alignment: Alignment.topRight,
+                                margin: EdgeInsets.only(
+                                  top: 15,
+                                  right: 10,
+                                ),
+                                child: Text(
+                                  allTours[element_id]['price'] + " RUB/",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                )),
+                            Container(
+                                alignment: Alignment.topRight,
+                                margin: EdgeInsets.only(
+                                  top: 5,
+                                  right: 10,
+                                ),
+                                child: Text(
+                                  "Взрослый",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 13,
+                                  ),
+                                )),
+                            Container(
+                                alignment: Alignment.topRight,
+                                margin: EdgeInsets.only(
+                                  top: 10,
+                                  right: 10,
+                                ),
+                                child: Text(
+                                  "Подробнее",
+                                  style: TextStyle(
+                                    color: Colors.blue[400],
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 13,
+                                  ),
+                                )),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    ) : Container();
+          )
+        : Container();
   }
 
-  Widget smallTourCard(BuildContext context,int element_id) {
+  Widget smallTourCard(BuildContext context, int element_id) {
     var m_ScreenSize = MediaQuery.of(context).size;
-    return  int.parse(allTours[element_id]['purchased_seats']) < int.parse(allTours[element_id]['seats_count']) ? FlatButton(
-      highlightColor: Colors.transparent,
-      splashColor: Colors.transparent,
-      minWidth: m_ScreenSize.width / 3,
-      padding: EdgeInsets.all(0),
-      onPressed: () {
-        Navigator.push(context,
-            MaterialPageRoute(
-                builder: (context) {
-                  return TourWidget(
-                      id: int.parse(
-                          allTours[element_id]['id']));
-                }));
-      },
-      child: Column(
-        crossAxisAlignment:
-        CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(
-                left: 0, right: 15),
-            width: 150,
-            height: 155,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius:
-              BorderRadius.circular(
-                  7),
-              image: DecorationImage(
-                image: NetworkImage(
-                    allTours[element_id]
-                    ['url_path']),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(
-                top: 10, bottom: 0),
-            alignment:
-            Alignment.bottomLeft,
-            child: Text(
-              allTours[element_id]['name'],
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight:
-                FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(
-                top: 5, bottom: 10),
-            alignment:
-            Alignment.bottomLeft,
-            child: Row(
-              mainAxisAlignment:
-              MainAxisAlignment.start,
+    return int.parse(allTours[element_id]['purchased_seats']) <
+            int.parse(allTours[element_id]['seats_count'])
+        ? FlatButton(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            minWidth: m_ScreenSize.width / 3,
+            padding: EdgeInsets.all(0),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return TourWidget(id: int.parse(allTours[element_id]['id']));
+              }));
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Icon(Icons.location_on,
-                    color: Colors.blue),
-                Text(
-                  allTours[element_id]['location'],
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 15,
+                allTours[element_id]['promotion'] == "1"
+                    ? ClipRect(
+                        child: Container(
+                          child: Banner(
+                            message: "Акция",
+                            location: BannerLocation.topEnd,
+                            color: Colors.red[400],
+                            child: Container(
+                              margin: EdgeInsets.only(left: 0, right: 15),
+                              width: m_ScreenSize.width * .35,
+                              height: 155,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                      allTours[element_id]['url_path']),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container(
+                        margin: EdgeInsets.only(left: 0, right: 15),
+                        width: m_ScreenSize.width * .35,
+                        height: 155,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(7),
+                          image: DecorationImage(
+                            image:
+                                NetworkImage(allTours[element_id]['url_path']),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                Container(
+                  margin: EdgeInsets.only(top: 10, bottom: 0),
+                  alignment: Alignment.bottomLeft,
+                  child: Text(
+                    allTours[element_id]['name'],
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 5, bottom: 10),
+                  alignment: Alignment.bottomLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Icon(Icons.location_on, color: Colors.blue),
+                      Text(
+                        allTours[element_id]['location'],
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    ) : Container();
+          )
+        : Container();
   }
 
-  Widget bigTourCard(BuildContext context,int element_id) {
+  Widget bigTourCard(BuildContext context, int element_id) {
     var m_ScreenSize = MediaQuery.of(context).size;
-    return  int.parse(allTours[element_id]['purchased_seats']) < int.parse(allTours[element_id]['seats_count']) ?  FlatButton(
-      highlightColor: Colors.transparent,
-      splashColor: Colors.transparent,
-      minWidth: m_ScreenSize.width / 3,
-      padding: EdgeInsets.only(
-          top: 5, bottom: 5),
-      onPressed: () {
-        Navigator.push(context,
-            MaterialPageRoute(
-                builder: (context) {
-                  return TourWidget(
-                      id: int.parse(
-                          allTours[element_id]['id']));
-                }));
-      },
-      child: Container(
-        margin: EdgeInsets.only(
-            left: 0, right: 15),
-        width: 200,
-        height: 280,
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius:
-          BorderRadius.circular(7),
-          image: DecorationImage(
-            image: NetworkImage(
-                allTours[element_id]['url_path']),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment:
-          CrossAxisAlignment.start,
-          mainAxisAlignment:
-          MainAxisAlignment.end,
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(
-                  left: 10, bottom: 5),
-              alignment:
-              Alignment.bottomLeft,
-              child: Text(
-                allTours[element_id]['name'],
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                  left: 10, bottom: 10),
-              alignment:
-              Alignment.bottomLeft,
-              child: Text(
-                allTours[element_id]['price'] +
-                    ' RUB',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ) : Container();
+    return int.parse(allTours[element_id]['purchased_seats']) <
+            int.parse(allTours[element_id]['seats_count'])
+        ? FlatButton(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            minWidth: m_ScreenSize.width / 3,
+            padding: EdgeInsets.only(top: 5, bottom: 5),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return TourWidget(id: int.parse(allTours[element_id]['id']));
+              }));
+            },
+            child: allTours[element_id]['promotion'] == "1"
+                ? ClipRect(
+                    child: Banner(
+                      message: "Акция",
+                      location: BannerLocation.topEnd,
+                      color: Colors.red[400],
+                      child: Container(
+                        margin: EdgeInsets.only(left: 0, right: 15),
+                        width: 200,
+                        height: 280,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(7),
+                          image: DecorationImage(
+                            image:
+                                NetworkImage(allTours[element_id]['url_path']),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(
+                    margin: EdgeInsets.only(left: 0, right: 15),
+                    width: 200,
+                    height: 280,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(7),
+                      image: DecorationImage(
+                        image: NetworkImage(allTours[element_id]['url_path']),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(left: 10, bottom: 5),
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            allTours[element_id]['name'],
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 10, bottom: 10),
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            allTours[element_id]['price'] + ' RUB',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+          )
+        : Container();
   }
 
   @override
@@ -485,7 +511,7 @@ class _MainPage extends State<MainPage> {
                                                 color: Colors.black,
                                               ),
                                               hintText:
-                                                  "Куда вы хотите поехать ? ",
+                                                  "Поиск подходящего тура",
                                               hintStyle: TextStyle(
                                                   color: Colors.black54),
                                             ),
@@ -575,8 +601,9 @@ class _MainPage extends State<MainPage> {
                                         vertical: 20, horizontal: 20),
                                     child: Row(
                                       children: <Widget>[
-                                        for (var i=0;i < 4;i++)
-                                          smallTourCard(context,rng.nextInt(allTours.length)),
+                                        for (var i = 0; i < 4; i++)
+                                          smallTourCard(context,
+                                              rng.nextInt(allTours.length)),
                                       ],
                                     ),
                                   ),
@@ -651,8 +678,9 @@ class _MainPage extends State<MainPage> {
                                         vertical: 20, horizontal: 20),
                                     child: Row(
                                       children: <Widget>[
-                                        for (var i =0; i < 4;i++)
-                                            smallTourCard(context,rng.nextInt(allTours.length)),
+                                        for (var i = 0; i < 4; i++)
+                                          smallTourCard(context,
+                                              rng.nextInt(allTours.length)),
                                       ],
                                     ),
                                   ),
@@ -697,8 +725,9 @@ class _MainPage extends State<MainPage> {
                                         vertical: 20, horizontal: 20),
                                     child: Row(
                                       children: <Widget>[
-                                        for (var i = 0;i < 4;i++)
-                                          bigTourCard(context,rng.nextInt(allTours.length)),
+                                        for (var i = 0; i < 4; i++)
+                                          bigTourCard(context,
+                                              rng.nextInt(allTours.length)),
                                       ],
                                     ),
                                   ),
@@ -734,10 +763,10 @@ class _MainPage extends State<MainPage> {
                           SingleChildScrollView(
                             child: Column(
                               children: <Widget>[
-                                for (var i =0; i < 3;i++)
+                                for (var i = 0; i < 3; i++)
                                   mainTourCard(
                                     context,
-                                   rng.nextInt(allTours.length),
+                                    rng.nextInt(allTours.length),
                                   ),
                               ],
                             ),

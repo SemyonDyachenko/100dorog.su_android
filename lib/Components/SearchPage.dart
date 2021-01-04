@@ -15,11 +15,18 @@ class _SearchPage extends State<SearchPage> {
   GlobalKey<RefreshIndicatorState> refreshKey;
   List text = [0, 1, 2, 3, 4, 5, 6];
 
-  Widget tourCard(BuildContext context, int product_id, String name,
-      String date, String url_path, String price, String location) {
+  Widget tourCard(
+      BuildContext context,
+      int product_id,
+      String name,
+      String date,
+      String url_path,
+      String price,
+      String location,
+      String promotion) {
     var m_ScreenSize = MediaQuery.of(context).size;
 
-    return  Container(
+    return Container(
       child: FlatButton(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         highlightColor: Colors.transparent,
@@ -33,17 +40,36 @@ class _SearchPage extends State<SearchPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Container(
-              height: m_ScreenSize.height / 3.2,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(6),
-                image: DecorationImage(
-                  image: NetworkImage(url_path),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+            promotion == "1"
+                ? ClipRect(
+                    child: Banner(
+                      message: "Акция",
+                      location: BannerLocation.topEnd,
+                      color: Colors.red[400],
+                      child: Container(
+                        height: m_ScreenSize.height / 3.2,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(6),
+                          image: DecorationImage(
+                            image: NetworkImage(url_path),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(
+                    height: m_ScreenSize.height / 3.2,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(6),
+                      image: DecorationImage(
+                        image: NetworkImage(url_path),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
             Container(
               margin: EdgeInsets.only(top: 15, bottom: 0, left: 0),
               child: Text(
@@ -144,7 +170,7 @@ class _SearchPage extends State<SearchPage> {
                         Icons.search,
                         color: Colors.black,
                       ),
-                      hintText: "Введите место куда вы хотите поехать",
+                      hintText: "Введите запрос",
                       hintStyle: TextStyle(color: Colors.black54),
                     ),
                   ),
@@ -178,18 +204,19 @@ class _SearchPage extends State<SearchPage> {
                     childAspectRatio: width / height,
                     children: <Widget>[
                       for (var i = 0; i < allTours.length; i++)
-                        if(allTours.length > 0
-                              && int.parse(allTours[i]['purchased_seats']) < int.parse(allTours[i]['seats_count']))
+                        if (allTours.length > 0 &&
+                            int.parse(allTours[i]['purchased_seats']) <
+                                int.parse(allTours[i]['seats_count']))
                           tourCard(
-                                context,
-                                int.parse(allTours[i]['id']),
-                                allTours[i]['name'],
-                                allTours[i]['event_date'].toString(),
-                                allTours[i]['url_path'].toString(),
-                                allTours[i]['price'].toString(),
-                                allTours[i]['location'].toString(),
-                              ),
-
+                            context,
+                            int.parse(allTours[i]['id']),
+                            allTours[i]['name'],
+                            allTours[i]['event_date'].toString(),
+                            allTours[i]['url_path'].toString(),
+                            allTours[i]['price'].toString(),
+                            allTours[i]['location'].toString(),
+                            allTours[i]['promotion'].toString(),
+                          ),
                     ],
                   ),
                 ),
