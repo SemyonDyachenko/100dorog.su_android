@@ -1,5 +1,11 @@
 import 'dart:convert';
 
+String datetimeToString(String dt) {
+  DateTime datetime = DateTime.parse(dt);
+  String result = datetime.day.toString() + " " +  monthKeyToString(datetime.month.toString(), true).toLowerCase();
+  return result;
+}
+
 String monthKeyToString(String key, bool conjugation) {
   var parsed = int.parse(key);
 

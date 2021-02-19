@@ -103,6 +103,7 @@ class _FavoritesWidget extends State<FavoritesWidget> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
+                  width: (m_ScreenSize.width * .9) * .5,
                   margin: EdgeInsets.only(top: 5, left: 15),
                   child: Text(
                     name,
@@ -110,6 +111,8 @@ class _FavoritesWidget extends State<FavoritesWidget> {
                         color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
                   ),
                 ),
                 Container(

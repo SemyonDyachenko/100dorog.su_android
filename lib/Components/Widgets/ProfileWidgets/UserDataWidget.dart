@@ -57,8 +57,8 @@ class _UserDataWidget extends State<UserDataWidget> {
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
-                blurRadius: 6.0,
-                offset: Offset(0, 2),
+                blurRadius: 2.0,
+                offset: Offset(0, 1),
               ),
             ],
           ),
@@ -96,8 +96,8 @@ class _UserDataWidget extends State<UserDataWidget> {
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
-                blurRadius: 6.0,
-                offset: Offset(0, 2),
+                blurRadius: 2.0,
+                offset: Offset(0, 1),
               ),
             ],
           ),
@@ -135,8 +135,8 @@ class _UserDataWidget extends State<UserDataWidget> {
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
-                blurRadius: 6.0,
-                offset: Offset(0, 2),
+                blurRadius: 2.0,
+                offset: Offset(0, 1),
               ),
             ],
           ),
@@ -262,17 +262,17 @@ class _UserDataWidget extends State<UserDataWidget> {
                       });
                     });
                   },
-                  padding: EdgeInsets.all(20.0),
+                  padding: EdgeInsets.all(15.0),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6.0),
+                    borderRadius: BorderRadius.circular(100.0),
                   ),
-                  color: Color.fromARGB(500, 0, 132, 255),
+                  color: Color.fromARGB(500, 54, 54, 54),
                   child: Text("Сохранить",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: 17,
                         fontWeight: FontWeight.w500,
-                        letterSpacing: 1.5,
+                        letterSpacing: 0.5,
                       )),
                 ),
               ),

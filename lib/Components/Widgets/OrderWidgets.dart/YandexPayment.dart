@@ -8,13 +8,15 @@ class YandexPayment extends StatefulWidget {
   final int sum;
   final int user_id;
   final int orderId;
+  final String comment;
 
   const YandexPayment(
       {Key key,
       @required this.tourName,
       @required this.sum,
       @required this.user_id,
-      @required this.orderId})
+      @required this.orderId,
+      @required this.comment})
       : super(key: key);
 
   _YandexPayment createState() => _YandexPayment();
@@ -48,6 +50,12 @@ class _YandexPayment extends State<YandexPayment> {
         target +
         "&need-email=" +
         "true" +
+        "&need-phone=" +
+        "true"+
+        "&need-fio=" +
+        "true" +
+        "&comment" +
+        widget.comment +
         "&quickpay-form=" +
         quickpayForm +
         "&label=" +

@@ -13,7 +13,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPage extends State<SearchPage> {
   List<Map<String, dynamic>> allTours = List<Map<String, dynamic>>();
   GlobalKey<RefreshIndicatorState> refreshKey;
-  List text = [0, 1, 2, 3, 4, 5, 6];
+
 
   Widget tourCard(
       BuildContext context,
@@ -77,8 +77,10 @@ class _SearchPage extends State<SearchPage> {
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 15,
                 ),
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
               ),
             ),
             Container(
@@ -136,95 +138,97 @@ class _SearchPage extends State<SearchPage> {
     var height = m_ScreenSize.height;
 
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await refreshData();
-        },
-        key: refreshKey,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(left: 20, right: 20, top: 15),
-                  alignment: Alignment.centerLeft,
-                  height: 40.0,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(6.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.white,
-                        blurRadius: 6.0,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    keyboardType: TextInputType.text,
-                    style: TextStyle(color: Colors.black),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(top: 6.0),
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.black,
-                      ),
-                      hintText: "Введите запрос",
-                      hintStyle: TextStyle(color: Colors.black54),
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await refreshData();
+          },
+          key: refreshKey,
+          child: 
+         SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(left: 20, right: 20, top: 15),
+                    alignment: Alignment.centerLeft,
+                    height: 40.0,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(6.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.white,
+                          blurRadius: 6.0,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(left: 20),
-                      child: Text(
-                        "Все туры",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                    child: TextFormField(
+                      keyboardType: TextInputType.text,
+                      style: TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.only(top: 6.0),
+                        prefixIcon: Icon(
+                          Icons.search,
                           color: Colors.black,
                         ),
+                        hintText: "Введите запрос",
+                        hintStyle: TextStyle(color: Colors.black54),
                       ),
                     ),
-                  ],
-                ),
-                SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 15,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: width / height,
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      for (var i = 0; i < allTours.length; i++)
-                        if (allTours.length > 0 &&
-                            int.parse(allTours[i]['purchased_seats']) <
-                                int.parse(allTours[i]['seats_count']))
-                          tourCard(
-                            context,
-                            int.parse(allTours[i]['id']),
-                            allTours[i]['name'],
-                            allTours[i]['event_date'].toString(),
-                            allTours[i]['url_path'].toString(),
-                            allTours[i]['price'].toString(),
-                            allTours[i]['location'].toString(),
-                            allTours[i]['promotion'].toString(),
+                      Container(
+                        margin: EdgeInsets.only(left: 20),
+                        child: Text(
+                          "Все туры",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
+                        ),
+                      ),
                     ],
                   ),
-                ),
-              ],
+                  SizedBox(height: 30),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 15,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: width / height,
+                      children: <Widget>[
+                        for (var i = 0; i < allTours.length; i++)
+                          if (allTours.length > 0 &&
+                              int.parse(allTours[i]['purchased_seats']) <
+                                  int.parse(allTours[i]['seats_count']))
+                            tourCard(
+                              context,
+                              int.parse(allTours[i]['id']),
+                              allTours[i]['name'],
+                              allTours[i]['event_date'].toString(),
+                              allTours[i]['url_path'].toString(),
+                              allTours[i]['price'].toString(),
+                              allTours[i]['location'].toString(),
+                              allTours[i]['promotion'].toString(),
+                            ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
       ),
+
     );
   }
 }

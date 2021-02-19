@@ -23,13 +23,13 @@ class TabNavigationItem {
           m_icon: Icon(Icons.explore_outlined),
           m_title: 'Главная',
         ),
-        TabNavigationItem(
+       /* TabNavigationItem(
           m_page: SearchPage(),
           m_icon: Icon(
             Icons.search_outlined,
           ),
           m_title: "Поиск",
-        ),
+        ),*/
         TabNavigationItem(
           m_page: MailPage(),
           m_icon: Icon(

@@ -19,6 +19,7 @@ class ConfirmOrder extends StatefulWidget {
 class _ConfirmOrder extends State<ConfirmOrder> {
   GlobalKey<RefreshIndicatorState> refreshKey;
   Map<String, dynamic> tourData = Map<String, dynamic>();
+  final _commentController = TextEditingController();
 
   var _passengerCount = 1;
   var _childCount = 0;
@@ -574,7 +575,34 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                                 ],
                               ),
                             ),
-                            SizedBox(height: 50),
+                            SizedBox(height: 20),
+                            Container(
+                              width: m_ScreenSize.width*.9,
+                              alignment: Alignment.topLeft,
+                              height: 100.0,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(6.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 6.0,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: TextField(
+                                controller: _commentController,
+                                keyboardType: TextInputType.multiline,
+                                style: TextStyle(color: Colors.black,fontSize: 14),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.only(top: 10.0,left:5.0,right:5.0),
+                                  hintText: "Введите ФИО и дату рождения всех пассажиров: ",
+                                  hintStyle: TextStyle(color: Colors.black54),
+                                ),
+                              ),
+                            ),
                             Container(
                               alignment: Alignment.center,
                               margin: EdgeInsets.only(top: 20, bottom: 10),
@@ -626,6 +654,7 @@ class _ConfirmOrder extends State<ConfirmOrder> {
                                                 sum: endPrice,
                                                 user_id: int.parse(id),
                                                 orderId: int.parse(value),
+                                                comment: _commentController.text,
                                               );
                                             }));
                                           } else {

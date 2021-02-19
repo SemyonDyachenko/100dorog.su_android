@@ -148,6 +148,7 @@ class _OrdersWidget extends State<OrdersWidget> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
+                  width: (m_ScreenSize.width * .9) * .5,
                   margin: EdgeInsets.only(top: 15, left: 15),
                   child: Text(
                     order_name,
@@ -155,6 +156,8 @@ class _OrdersWidget extends State<OrdersWidget> {
                         color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
                   ),
                 ),
                 SizedBox(width: 10),

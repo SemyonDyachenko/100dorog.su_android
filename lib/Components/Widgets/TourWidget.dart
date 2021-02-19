@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//import 'package:share/share.dart';
 import 'package:travel/Components/Widgets/OrderWidgets.dart/ConfirmOrder.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/ProfileLogin.dart';
 import 'package:travel/Components/Widgets/ProfileWidgets/ProfileSignup.dart';
@@ -237,7 +238,9 @@ class _TourWidget extends State<TourWidget> {
                   Container(
                     child: FlatButton(
                       minWidth: 25,
-                      onPressed: () {},
+                      onPressed: () {
+                        //Share.share("https://100dorog.su/tour.php?id="+widget.id.toString(),subject: "Подробнее о туре 100 Дорог");
+                      },
                       child: Icon(Icons.share, color: Colors.white, size: 25),
                     ),
                   ),
@@ -255,8 +258,9 @@ class _TourWidget extends State<TourWidget> {
                     children: <Widget>[
                       Container(
                         width: m_ScreenSize.width,
-                        height: m_ScreenSize.height * .35,
+                        height: m_ScreenSize.height * .45,
                         decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(bottomRight: Radius.circular(50)),
                           image: DecorationImage(
                             image: NetworkImage(tourData['url_path']),
                             fit: BoxFit.cover,
